@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import com.tresor.R
-import com.tresor.base.BaseActivity
+import com.tresor.base.view.BaseActivity
 import com.tresor.login.di.component.DaggerLoginComponent
+import com.tresor.login.di.module.LoginModule
 import com.tresor.login.view.presenter.LoginPresenter
 import javax.inject.Inject
 
@@ -19,6 +20,8 @@ class LoginActivity: BaseActivity(){
         DaggerLoginComponent
                 .builder()
                 .appComponent(getAppComponent())
+                .activityModule(getActivityModule())
+                .loginModule(LoginModule())
                 .build()}
 
     @Inject lateinit var presenter: LoginPresenter

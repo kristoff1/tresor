@@ -1,8 +1,8 @@
 package com.tresor.base.di.component
 
 import android.app.Activity
-import com.tresor.base.di.module.ActivityModule
 import com.tresor.base.di.module.AppModule
+import com.tresor.base.navigator.Navigator
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,7 +12,9 @@ import javax.inject.Singleton
  */
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, ActivityModule::class))
+@Component(modules = arrayOf(AppModule::class))
 interface AppComponent{
     fun inject (activity: Activity)
+
+    fun getNavigator(): Navigator
 }

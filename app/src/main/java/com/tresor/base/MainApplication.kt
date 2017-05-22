@@ -3,7 +3,6 @@ package com.tresor.base
 import android.app.Application
 import com.tresor.base.di.component.AppComponent
 import com.tresor.base.di.component.DaggerAppComponent
-import com.tresor.base.di.module.ActivityModule
 import com.tresor.base.di.module.AppModule
 
 /**
@@ -14,12 +13,13 @@ class MainApplication: Application(){
 
     val component by lazy { DaggerAppComponent
             .builder()
-            .appModule(AppModule(this)) }
+            .appModule(AppModule(this))
+            .build()
+    }
 
     override fun onCreate() {
         super.onCreate()
     }
 
-    fun getAppComponent(activityModule: ActivityModule): AppComponent =
-            component.activityModule(activityModule).build()
+    fun getAppComponent(): AppComponent = component
 }
