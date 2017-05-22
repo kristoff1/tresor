@@ -6,7 +6,9 @@ import android.widget.EditText
 import com.tresor.R
 import com.tresor.base.view.BaseActivity
 import com.tresor.login.di.component.DaggerLoginComponent
+import com.tresor.login.di.component.LoginComponent
 import com.tresor.login.di.module.LoginModule
+import com.tresor.login.domain.model.UserLoginDomainModel
 import com.tresor.login.view.presenter.LoginPresenter
 import javax.inject.Inject
 
@@ -14,7 +16,7 @@ import javax.inject.Inject
  * @author sebastianuskh on 5/20/17.
  */
 
-class LoginActivity: BaseActivity(){
+class LoginActivity: BaseActivity(), LoginView{
 
     val component by lazy {
         DaggerLoginComponent
@@ -31,6 +33,8 @@ class LoginActivity: BaseActivity(){
         setContentView(R.layout.activity_login)
 
         component.inject(this)
+
+        presenter.view = this
 
         val loginButton = findViewById(R.id.login_button) as Button
         loginButton.setOnClickListener {
