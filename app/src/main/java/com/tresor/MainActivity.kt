@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         val date = et_date.text.toString()
         val nominal = et_nominal.text.toString()
         val info = et_info.text.toString()
+        val key = myRef.child(USER).push().getKey()
 
         val post = Post(date, nominal, info)
         val postValues = post.toMap()
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         val childUpdates = HashMap<String, Any>()
         childUpdates.put("/$USER/$", postValues)
 
-        myRef.child(USER).setValue(postValues)
+        myRef.child(USER).push().setValue(postValues)
     }
 
 //    private fun receiveFromFirebase() {
