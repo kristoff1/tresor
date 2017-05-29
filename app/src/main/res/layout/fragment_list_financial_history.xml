@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorContrast">
 
         <EditText
             android:id="@+id/field_hastag"
@@ -28,7 +29,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,13 +40,13 @@
                     android:id="@+id/date_field_from"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
                 <EditText
                     android:id="@+id/date_field_to"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -58,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Close"/>
+                    android:text="Close" />
 
                 <TextView
                     android:id="@+id/search_button"
@@ -66,11 +68,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Search"/>
+                    android:text="Search" />
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <include android:id="@+id/adder_layout"
+        layout="@layout/insert_new_list"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_financial_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

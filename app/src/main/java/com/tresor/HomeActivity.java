@@ -9,6 +9,8 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tresor.home.fragment.ListFinancialHistoryFragment;
+
 /**
  * Created by kris on 5/27/17. Tokopedia
  */
@@ -23,9 +25,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-        homeTab.addTab(homeTab.newTab().setText("Notes"));
-        homeTab.addTab(homeTab.newTab().setText("Memos"));
-        homeTab.addTab(homeTab.newTab().setText("Events"));
+        homeTab = (TabLayout) findViewById(R.id.home_tab);
+        homePager = (ViewPager) findViewById(R.id.home_pager);
+        homeTab.addTab(homeTab.newTab().setText("History"));
+        homeTab.addTab(homeTab.newTab().setText("Statistic"));
+        homeTab.addTab(homeTab.newTab().setText("Options"));
         homeTab.setTabGravity(TabLayout.GRAVITY_FILL);
         homePager.setAdapter(homePagerAdapter(getFragmentManager()));
         homePager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(homeTab));
@@ -53,13 +57,13 @@ public class HomeActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return NotesListFragment.createNoteListFragment();
+                        return new ListFinancialHistoryFragment();
                     case 1:
-                        return MemoListFragment.createMemoListFragment();
+                        return new ListFinancialHistoryFragment();
                     case 2:
-                        return EventListFragment.createEventList();
+                        return new ListFinancialHistoryFragment();
                     default:
-                        return NotesListFragment.createNoteListFragment();
+                        return new ListFinancialHistoryFragment();
                 }
             }
 

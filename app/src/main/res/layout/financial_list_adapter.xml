@@ -17,6 +17,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/history_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -39,17 +40,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/history_hastag"
                     style="@style/HashTag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="#Makan #Siang #Liburan" />
 
                 <TextView
+                    android:id="@+id/history_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Martabak Telor Mang Udin the Conqueror 3 Paket" />
 
                 <TextView
+                    android:id="@+id/history_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="08.32 WIB April 7th 2017"

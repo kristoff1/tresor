@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="editTextStyle">@style/AppEditText</item>
     </style>
 
     <style name="SubLayoutItem">
@@ -80,4 +81,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="AppEditText" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/rounded_edit_text_background</item>
+        <item name="android:layout_margin">@dimen/margin_vs</item>
+    </style>
 </resources>
