@@ -1,17 +1,24 @@
 package com.tresor.home.fragment;
 
+import android.app.ActivityOptions;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.tresor.R;
+import com.tresor.home.activity.HomeActivity;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
 import com.tresor.home.model.FinancialHistoryModel;
+import com.tresor.profile.ProfilePageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +32,12 @@ public class ListFinancialHistoryFragment extends Fragment {
     private RecyclerView financialHistoryList;
     private RecyclerView.Adapter financialHistoryListAdapter;
 
+    private BottomSheetDialog bottomSheetDialog;
+
+    private FloatingActionButton insertDataFab;
+
+    private TextView goToHistoryButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -33,7 +46,41 @@ public class ListFinancialHistoryFragment extends Fragment {
         financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
         financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(), financialHistoryModelList());
         financialHistoryList.setAdapter(financialHistoryListAdapter);
+
+        insertDataFab = (FloatingActionButton) mainView.findViewById(R.id.history_floating_action_button);
+        insertDataFab.setOnClickListener(onFabButtonClickedListener());
+
+        bottomSheetDialog = new BottomSheetDialog(getActivity());
+        View bottomSheetView = inflater.inflate(R.layout.add_new_data_bottom_sheet, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+
+        goToHistoryButton = (TextView) mainView.findViewById(R.id.go_to_history_button);
+        goToHistoryButton.setOnClickListener(onGoToHistoryButton());
+
         return mainView;
+    }
+
+    private View.OnClickListener onFabButtonClickedListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
+            }
+        };
+    }
+
+    private View.OnClickListener onGoToHistoryButton() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfilePageActivity.class);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options;
+                    options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), financialHistoryList, "financial list");
+                    startActivity(intent, options.toBundle());
+                } else startActivity(intent);
+            }
+        };
     }
 
     private List<FinancialHistoryModel> financialHistoryModelList() {

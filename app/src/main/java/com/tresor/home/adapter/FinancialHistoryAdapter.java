@@ -27,6 +27,11 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<FinancialHisto
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public FinancialHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View adapterView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.financial_list_adapter, parent, false);
@@ -49,17 +54,19 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<FinancialHisto
     }
 
     class FinancialHistoryViewHolder extends RecyclerView.ViewHolder {
-    private TextView historyAmount;
+        private TextView historyAmount;
         private TextView historyHashtag;
         private TextView historyInfo;
-    private TextView historyDate;
-    FinancialHistoryViewHolder(View itemView) {
-        super(itemView);
-        historyAmount = (TextView) itemView.findViewById(R.id.history_amount);
-        historyHashtag = (TextView) itemView.findViewById(R.id.history_hastag);
-        historyInfo = (TextView) itemView.findViewById(R.id.history_info);
-        historyDate = (TextView) itemView.findViewById(R.id.history_date);
+        private TextView historyDate;
+
+        FinancialHistoryViewHolder(View itemView) {
+            super(itemView);
+            historyAmount = (TextView) itemView.findViewById(R.id.history_amount);
+            historyHashtag = (TextView) itemView.findViewById(R.id.history_hastag);
+            historyInfo = (TextView) itemView.findViewById(R.id.history_info);
+            historyDate = (TextView) itemView.findViewById(R.id.history_date);
+        }
+
     }
-}
 
 }

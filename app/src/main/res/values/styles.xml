@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="editTextStyle">@style/AppEditText</item>
+        <item name="buttonStyle">@style/AppButton</item>
     </style>
 
     <style name="SubLayoutItem">
@@ -83,6 +84,19 @@
 
     <style name="AppEditText" parent="@android:style/Widget.EditText">
         <item name="android:background">@drawable/rounded_edit_text_background</item>
-        <item name="android:layout_margin">@dimen/margin_vs</item>
+        <item name="android:layout_margin">@dimen/margin_small</item>
+        <item name="android:padding">@dimen/padding_small</item>
+        <item name="android:height">@dimen/edit_text_height</item>
     </style>
+
+    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/subItemSelected</item>
+        <item name="tabBackground">@color/colorMain</item>
+    </style>
+
+    <!-- for text -->
+    <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
+
+    </style>
+    
 </resources>
