@@ -3,25 +3,72 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSecondary">
+    android:background="@color/colorDark">
 
-    <EditText
-        android:id="@+id/insert_new_hashtag_edit_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small" />
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small">
 
-    <EditText
-        android:id="@+id/edit_text_insert_amount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_big"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:text="Rp"/>
+
+        <EditText
+            android:id="@+id/edit_text_insert_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="0"
+            android:layout_marginLeft="@dimen/margin_vs"
+            android:layout_marginStart="@dimen/margin_vs"
+            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edit_text_insert_info"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
+        android:hint="Insert info and add #hashtag to uniquely categorize the info"
         android:layout_margin="@dimen/margin_small" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_cat_kitchen_dining_big"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_cat_clothing_big"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_cat_health_big"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_cat_automotive_big"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_cat_everything_else_big"/>
+
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"

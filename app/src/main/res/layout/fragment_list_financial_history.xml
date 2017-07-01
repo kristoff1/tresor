@@ -1,45 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/go_to_history_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/adapter_height"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@mipmap/ic_history"
-            android:layout_margin="@dimen/margin_vs"/>
-
-        <TextView
-            android:id="@+id/go_to_history_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_title"
-            android:text="Go To History"/>
-
-    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_financial_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/go_to_history_layout">
-    </android.support.v7.widget.RecyclerView>
+        android:background="@color/lightSand"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/history_floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/margin_small"
-        android:src="@mipmap/ic_add"/>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -14,6 +14,8 @@ public class FinancialHistoryModel {
 
     private String date;
 
+    private int theme;
+
     public String getAmount() {
         return amount;
     }
@@ -44,5 +46,13 @@ public class FinancialHistoryModel {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getTheme() {
+        return theme;
+    }
+
+    public void setTheme(int theme) {
+        this.theme = theme;
     }
 }

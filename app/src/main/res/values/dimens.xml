@@ -7,6 +7,7 @@
     <dimen name="text_content">12sp</dimen>
     <dimen name="padding_vs">6dp</dimen>
     <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_big">28dp</dimen>
     <dimen name="margin_vs">6dp</dimen>
     <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_medium">14dp</dimen>

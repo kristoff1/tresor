@@ -6,14 +6,17 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.tresor.R;
 import com.tresor.common.TresorActivity;
+import com.tresor.home.fragment.SearchFragment;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
 import com.tresor.home.fragment.StatisticFragment;
 import com.tresor.profile.ProfilePageActivity;
@@ -30,17 +33,25 @@ public class HomeActivity extends TresorActivity {
 
     private LinearLayout bannerBudget;
 
+    private Toolbar homeToolbar;
+
+    private ListFinancialHistoryFragment listFinancialHistoryFragment;
+
+    private FloatingActionButton historicalFloatingActionButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         homeTab = (TabLayout) findViewById(R.id.home_tab);
         homePager = (ViewPager) findViewById(R.id.home_pager);
-        bannerBudget = (LinearLayout)findViewById(R.id.header_budget_layout);
+        homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        homeToolbar.setTitle("Tresor");
+        bannerBudget = (LinearLayout) findViewById(R.id.header_budget_layout);
         bannerBudget.setOnClickListener(onBannerClickedListener());
+        homeTab.addTab(homeTab.newTab().setText("Spending"));
         homeTab.addTab(homeTab.newTab().setText("History"));
         homeTab.addTab(homeTab.newTab().setText("Statistic"));
-        homeTab.addTab(homeTab.newTab().setText("Options"));
         homeTab.setTabGravity(TabLayout.GRAVITY_FILL);
         homePager.setAdapter(homePagerAdapter(getFragmentManager()));
         homePager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(homeTab));
@@ -60,6 +71,14 @@ public class HomeActivity extends TresorActivity {
 
             }
         });
+        historicalFloatingActionButton = (FloatingActionButton)
+                findViewById(R.id.history_floating_action_button);
+        historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listFinancialHistoryFragment.onHomeButtonFabClicked();
+            }
+        });
     }
 
     private FragmentStatePagerAdapter homePagerAdapter(FragmentManager fragmentManager) {
@@ -68,13 +87,15 @@ public class HomeActivity extends TresorActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return new ListFinancialHistoryFragment();
+                        listFinancialHistoryFragment = new ListFinancialHistoryFragment();
+                        return listFinancialHistoryFragment;
                     case 1:
-                        return new StatisticFragment();
+                        return new SearchFragment();
                     case 2:
-                        return new ListFinancialHistoryFragment();
+                        return new StatisticFragment();
                     default:
-                        return new ListFinancialHistoryFragment();
+                        listFinancialHistoryFragment = new ListFinancialHistoryFragment();
+                        return listFinancialHistoryFragment;
                 }
             }
 
