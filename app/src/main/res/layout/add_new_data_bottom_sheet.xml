@@ -3,9 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDark">
+    android:background="@color/colorDark"
+    android:padding="@dimen/padding_small"
+    android:animateLayoutChanges="true">
 
     <LinearLayout
+        android:id="@+id/amount_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -13,6 +16,7 @@
         android:layout_marginStart="@dimen/margin_small">
 
         <TextView
+            android:id="@+id/currency"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="@dimen/text_big"
@@ -32,16 +36,32 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/edit_text_insert_info"
+    <LinearLayout
+        android:id="@+id/edit_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:hint="Insert info and add #hashtag to uniquely categorize the info"
-        android:layout_margin="@dimen/margin_small" />
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/edit_text_insert_info"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="Insert info and add #hashtag to uniquely categorize the info"
+            android:layout_margin="@dimen/margin_small" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/icon_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <LinearLayout
+        android:id="@+id/icon_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -70,9 +90,40 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/step_by_step_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/skip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Skip"/>
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Next"/>
+
+    </LinearLayout>
+
     <Button
+        android:id="@+id/finish_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_gravity="center"
+        android:visibility="gone"
         android:text="Okay"/>
 
 </LinearLayout>

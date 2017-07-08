@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.tresor.R;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
+import com.tresor.home.bottomsheet.AddPaymentBottomSheet;
 import com.tresor.home.model.FinancialHistoryModel;
+import com.tresor.home.model.SpendingDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +38,30 @@ public class ListFinancialHistoryFragment extends Fragment {
         financialHistoryList = (RecyclerView) mainView.findViewById(R.id.list_financial_history);
         financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
         financialHistoryList.setHasFixedSize(true);
-        financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(), financialHistoryModelList());
+        financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(), spendingDataModel());
         financialHistoryList.setAdapter(financialHistoryListAdapter);
-
-        bottomSheetDialog = new BottomSheetDialog(getActivity());
-        View bottomSheetView = inflater.inflate(R.layout.add_new_data_bottom_sheet, null);
-        bottomSheetDialog.setContentView(bottomSheetView);
 
         return mainView;
     }
 
     public void onHomeButtonFabClicked() {
+        bottomSheetDialog = new AddPaymentBottomSheet(getActivity());
         bottomSheetDialog.show();
+    }
+
+    private SpendingDataModel spendingDataModel() {
+        SpendingDataModel model = new SpendingDataModel();
+        model.setDailyAllocation(0);
+        model.setDailyAllocationString("Rp 0");
+        model.setFinancialHistoryModelList(financialHistoryModelList());
+        model.setHistory(false);
+        model.setTodayAllocation(0);
+        model.setTodayAllocationString("Rp 0");
+        model.setTodaySaving(0);
+        model.setTodaySavingString("Rp 0");
+        model.setTotalSpending(250000);
+        model.setTotalSpendingString("Rp 250.000");
+        return model;
     }
 
     private List<FinancialHistoryModel> financialHistoryModelList() {

@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_vs"
+    app:cardBackgroundColor="@color/colorAlternative"
+    app:cardCornerRadius="4dp"
+    android:padding="@dimen/padding_vs">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_vs"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_vs"
+            android:layout_marginStart="@dimen/margin_vs">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_spend_money_512"
+                android:drawableStart="@drawable/ic_spend_money_512"
+                android:drawablePadding="@dimen/padding_vs"
+                android:text="Total Spending"/>
+
+            <TextView
+                android:id="@+id/total_expense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_title"
+                android:textColor="@color/textMoneyExpense"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Rp 200.000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/allocated_spending_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_vs"
+            android:layout_marginStart="@dimen/margin_vs"
+            android:layout_marginTop="@dimen/margin_vs"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_money_stack_512"
+                android:drawableStart="@drawable/ic_money_stack_512"
+                android:drawablePadding="@dimen/padding_vs"
+                android:text="Allocated"/>
+
+            <TextView
+                android:id="@+id/total_allocated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_title"
+                android:textColor="@color/textMoney"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Rp 300.000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/save_money_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_vs"
+            android:layout_marginStart="@dimen/margin_vs"
+            android:layout_marginTop="@dimen/margin_vs"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_save_money_512"
+                android:drawableStart="@drawable/ic_save_money_512"
+                android:drawablePadding="@dimen/padding_vs"
+                android:text="Saved"/>
+
+            <TextView
+                android:id="@+id/total_saved"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_title"
+                android:textColor="@color/textMoney"
+                android:gravity="end"
+                android:layout_weight="1"
+                android:text="Rp 100.000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_allocated_spending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_vs">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@android:drawable/ic_input_add"
+                android:drawableStart="@android:drawable/ic_input_add"
+                android:text="Set Allocation"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

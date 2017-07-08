@@ -19,6 +19,7 @@ import com.aigestudio.wheelpicker.widgets.WheelYearPicker;
 import com.tresor.R;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
 import com.tresor.home.model.FinancialHistoryModel;
+import com.tresor.home.model.SpendingDataModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,10 +51,25 @@ public class SearchFragment extends Fragment {
 
         searchList = (RecyclerView) mainView.findViewById(R.id.filtered_list);
         searchList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        searchListAdapter = new FinancialHistoryAdapter(getActivity(), financialHistoryModelList());
+        searchListAdapter = new FinancialHistoryAdapter(getActivity(), spendingDataModel());
         searchList.setAdapter(searchListAdapter);
 
         return mainView;
+    }
+
+    private SpendingDataModel spendingDataModel() {
+        SpendingDataModel model = new SpendingDataModel();
+        model.setDailyAllocation(0);
+        model.setDailyAllocationString("Rp 0");
+        model.setFinancialHistoryModelList(financialHistoryModelList());
+        model.setHistory(true);
+        model.setTodayAllocation(0);
+        model.setTodayAllocationString("Rp 0");
+        model.setTodaySaving(0);
+        model.setTodaySavingString("Rp 0");
+        model.setTotalSpending(250000);
+        model.setTotalSpendingString("Rp 250.000");
+        return model;
     }
 
     private List<FinancialHistoryModel> financialHistoryModelList() {
@@ -64,6 +80,9 @@ public class SearchFragment extends Fragment {
             financialHistoryModel.setDate("08.32 WIB February 17th 2017");
             financialHistoryModel.setHashtag("#Makan #Siang #Liburan");
             financialHistoryModel.setInfo("Martabak Telor Mang Udin the Conqueror 3 Paket");
+            if(i > 4) {
+                financialHistoryModel.setTheme(i - 5);
+            } else financialHistoryModel.setTheme(i);
             list.add(financialHistoryModel);
         }
         return list;

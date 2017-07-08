@@ -8,6 +8,8 @@
         android:id="@+id/list_financial_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightSand"/>
+        android:background="@color/lightSand"
+        android:paddingTop="@dimen/padding_vs"
+        android:paddingBottom="@dimen/padding_vs"/>
 
 </android.support.design.widget.CoordinatorLayout>
