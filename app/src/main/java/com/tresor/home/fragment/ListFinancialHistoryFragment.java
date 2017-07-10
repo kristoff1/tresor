@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 import com.tresor.R;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
 import com.tresor.home.bottomsheet.AddPaymentBottomSheet;
@@ -38,6 +39,7 @@ public class ListFinancialHistoryFragment extends Fragment {
         financialHistoryList = (RecyclerView) mainView.findViewById(R.id.list_financial_history);
         financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
         financialHistoryList.setHasFixedSize(true);
+        financialHistoryList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
         financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(), spendingDataModel());
         financialHistoryList.setAdapter(financialHistoryListAdapter);
 

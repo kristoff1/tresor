@@ -23,8 +23,7 @@
     </style>
 
     <style name="BudgetBanner">
-        <item name="android:paddingTop">@dimen/padding_big</item>
-        <item name="android:background">@color/colorMain</item>
+        <item name="android:background">@mipmap/background</item>
 
     </style>
 
@@ -89,10 +88,10 @@
         <item name="android:height">@dimen/edit_text_height</item>
     </style>
 
-    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+    <!--<style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/subItemSelected</item>
         <item name="tabBackground">@color/colorMain</item>
-    </style>
+    </style>-->
 
     <!-- for text -->
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">

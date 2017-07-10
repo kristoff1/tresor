@@ -9,11 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.tresor.R;
 import com.tresor.common.TresorActivity;
 import com.tresor.home.fragment.SearchFragment;
@@ -27,13 +28,7 @@ import com.tresor.profile.ProfilePageActivity;
 
 public class HomeActivity extends TresorActivity {
 
-    private ViewPager homePager;
-
-    private TabLayout homeTab;
-
-    private LinearLayout bannerBudget;
-
-    private Toolbar homeToolbar;
+    private MaterialViewPager homePager;
 
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
@@ -43,34 +38,8 @@ public class HomeActivity extends TresorActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-        homeTab = (TabLayout) findViewById(R.id.home_tab);
-        homePager = (ViewPager) findViewById(R.id.home_pager);
-        homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        homeToolbar.setTitle("Tresor");
-        bannerBudget = (LinearLayout) findViewById(R.id.header_budget_layout);
-        bannerBudget.setOnClickListener(onBannerClickedListener());
-        homeTab.addTab(homeTab.newTab().setText("Spending"));
-        homeTab.addTab(homeTab.newTab().setText("History"));
-        homeTab.addTab(homeTab.newTab().setText("Statistic"));
-        homeTab.setTabGravity(TabLayout.GRAVITY_FILL);
-        homePager.setAdapter(homePagerAdapter(getFragmentManager()));
-        homePager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(homeTab));
-        homeTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                homePager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        homePager = (MaterialViewPager) findViewById(R.id.home_pager);
+        homePager.getViewPager().setAdapter(homePagerAdapter(getFragmentManager()));
         historicalFloatingActionButton = (FloatingActionButton)
                 findViewById(R.id.history_floating_action_button);
         historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +48,13 @@ public class HomeActivity extends TresorActivity {
                 listFinancialHistoryFragment.onHomeButtonFabClicked();
             }
         });
+        final Toolbar toolbar = homePager.getToolbar();
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        homePager.setMaterialViewPagerListener(pagerListener());
+        homePager.getViewPager().setOffscreenPageLimit(homePager.getViewPager().getAdapter().getCount());
+        homePager.getPagerTitleStrip().setViewPager(homePager.getViewPager());
     }
 
     private FragmentStatePagerAdapter homePagerAdapter(FragmentManager fragmentManager) {
@@ -101,23 +77,42 @@ public class HomeActivity extends TresorActivity {
 
             @Override
             public int getCount() {
-                return homeTab.getTabCount();
+                return 3;
+            }
+
+            public CharSequence getPageTitle(int position) {
+                switch (position) {
+                    case 0:
+                        return "Spending";
+                    case 1:
+                        return "History";
+                    case 2:
+                        return "Statistic";
+                }
+                return "";
             }
         };
     }
 
-    private View.OnClickListener onBannerClickedListener() {
-        return new View.OnClickListener() {
+    private MaterialViewPager.Listener pagerListener() {
+        return new MaterialViewPager.Listener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, ProfilePageActivity.class);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options;
-                    options = ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this,
-                            bannerBudget, "robot");
-                    startActivity(intent, options.toBundle());
-                } else startActivity(intent);
-                //TODO make transition animation
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.green,
+                                "http://phandroid.s3.amazonaws.com/wp-content/uploads/2014/06/android_google_moutain_google_now_1920x1080_wallpaper_Wallpaper-HD_2560x1600_www.paperhi.com_-640x400.jpg");
+                    case 1:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://www.hdiphonewallpapers.us/phone-wallpapers/540x960-1/540x960-mobile-wallpapers-hd-2218x5ox3.jpg");
+                    case 2:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.cyan,
+                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                }
+                return null;
             }
         };
     }
