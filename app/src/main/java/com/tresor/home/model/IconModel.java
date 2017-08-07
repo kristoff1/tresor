@@ -8,7 +8,9 @@ public class IconModel {
 
     private int iconImageId;
 
-    private boolean available;
+    private boolean available = true;
+
+    private boolean choosen = false;
 
     public int getIconImageId() {
         return iconImageId;
@@ -24,5 +26,13 @@ public class IconModel {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public boolean isChoosen() {
+        return choosen;
+    }
+
+    public void setChoosen(boolean choosen) {
+        this.choosen = choosen;
     }
 }

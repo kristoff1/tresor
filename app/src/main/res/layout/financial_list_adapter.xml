@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/colorAlternative"
-    app:cardCornerRadius="4dp"
-    android:layout_margin="@dimen/margin_vs">
+    android:layout_margin="@dimen/margin_vs"
+    app:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:text="Rp 50.000"
                     android:textColor="@color/textMoneyExpense"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_title"
                     android:textStyle="bold" />
 
                 <TextView

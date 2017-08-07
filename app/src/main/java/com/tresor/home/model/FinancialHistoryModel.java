@@ -1,5 +1,8 @@
 package com.tresor.home.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by kris on 5/28/17. Tokopedia
  */
@@ -8,7 +11,13 @@ public class FinancialHistoryModel {
 
     private String amount;
 
-    private String hashtag;
+    private int amountUnformatted;
+
+    private boolean usesComma;
+
+    private int currencyId;
+
+    private List<String> hashtag = new ArrayList<>();
 
     private String info;
 
@@ -20,15 +29,39 @@ public class FinancialHistoryModel {
         return amount;
     }
 
+    public int getAmountUnformatted() {
+        return amountUnformatted;
+    }
+
+    public void setAmountUnformatted(int amountUnformatted) {
+        this.amountUnformatted = amountUnformatted;
+    }
+
+    public boolean isUsesComma() {
+        return usesComma;
+    }
+
+    public void setUsesComma(boolean usesComma) {
+        this.usesComma = usesComma;
+    }
+
+    public int getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(int currencyId) {
+        this.currencyId = currencyId;
+    }
+
     public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public String getHashtag() {
+    public List<String> getHashtag() {
         return hashtag;
     }
 
-    public void setHashtag(String hashtag) {
+    public void setHashtag(List<String> hashtag) {
         this.hashtag = hashtag;
     }
 

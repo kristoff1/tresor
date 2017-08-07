@@ -78,8 +78,13 @@ public class SearchFragment extends Fragment {
             FinancialHistoryModel financialHistoryModel = new FinancialHistoryModel();
             financialHistoryModel.setAmount("Rp 50.000");
             financialHistoryModel.setDate("08.32 WIB February 17th 2017");
-            financialHistoryModel.setHashtag("#Makan #Siang #Liburan");
-            financialHistoryModel.setInfo("Martabak Telor Mang Udin the Conqueror 3 Paket");
+            List<String> hashTagList = new ArrayList<>();
+            hashTagList.add("#Makan");
+            hashTagList.add("#Siang");
+            hashTagList.add("#Liburan");
+            financialHistoryModel.setHashtag(hashTagList);
+            financialHistoryModel
+                    .setInfo("#Liburan #Makan Martabak Telor Mang Udin the Conqueror #Siang siang 3 Paket");
             if(i > 4) {
                 financialHistoryModel.setTheme(i - 5);
             } else financialHistoryModel.setTheme(i);

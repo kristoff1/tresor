@@ -1,34 +1,42 @@
-package com.tresor.home.bottomsheet;
+package com.tresor.home.dialog;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tresor.R;
+import com.tresor.home.bottomsheet.IconAdapter;
 import com.tresor.home.inteface.IconSelectetionListener;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.IconModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import faranjit.currency.edittext.CurrencyEditText;
+
 /**
- * Created by kris on 7/4/17. Tokopedia
+ * Created by kris on 7/16/17. Tokopedia
  */
 
-public class AddPaymentBottomSheet extends BottomSheetDialog implements IconSelectetionListener{
+public class AddPaymentDialog extends DialogFragment implements IconSelectetionListener {
 
     private LinearLayout amountLayout;
     private LinearLayout iconLayout;
@@ -37,60 +45,74 @@ public class AddPaymentBottomSheet extends BottomSheetDialog implements IconSele
     private RecyclerView iconList;
     private RecyclerView.Adapter iconListAdapter;
     private TextView textCurrency;
-    private EditText fieldAmount;
+    private CurrencyEditText fieldAmount;
     private EditText fieldInfo;
-    private Button finishButton;
-    private Button nextButton;
-    private Button skipButton;
+    private TextView finishButton;
+    private TextView nextButton;
+    private TextView skipButton;
     private View showAllChevron;
     private NewDataAddedListener listener;
     private int selectedIconIndex = 0;
     private int iconId = 0;
     private List<IconModel> generatedIcons;
+    private InputMethodManager imm;
 
-    public AddPaymentBottomSheet(@NonNull Context context, NewDataAddedListener listener) {
-        super(context);
-        this.listener = listener;
-        initView(context);
+    public AddPaymentDialog() {
+
     }
 
-    private void initView(Context context) {
-        View view = ((Activity)context).getLayoutInflater()
-                .inflate(R.layout.add_new_data_bottom_sheet, null);
-        setContentView(view);
+    public void initiateListener(NewDataAddedListener listener) {
+        this.listener = listener;
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater
+                .inflate(R.layout.add_new_data_bottom_sheet, container);
         amountLayout = (LinearLayout) view.findViewById(R.id.amount_layout);
         infoLayout = (LinearLayout) view.findViewById(R.id.edit_info_layout);
         iconLayout = (LinearLayout) view.findViewById(R.id.icon_layout);
         stepByStepLayout = (LinearLayout) view.findViewById(R.id.step_by_step_layout);
         textCurrency = (TextView) view.findViewById(R.id.currency);
-        fieldAmount = (EditText) view.findViewById(R.id.edit_text_insert_amount);
+        fieldAmount = (CurrencyEditText) view.findViewById(R.id.edit_text_insert_amount);
         fieldInfo = (EditText) view.findViewById(R.id.edit_text_insert_info);
-        finishButton = (Button) view.findViewById(R.id.finish_button);
-        nextButton = (Button) view.findViewById(R.id.next_button);
-        skipButton = (Button) view.findViewById(R.id.skip_button);
+        finishButton = (TextView) view.findViewById(R.id.finish_button);
+        nextButton = (TextView) view.findViewById(R.id.next_button);
+        skipButton = (TextView) view.findViewById(R.id.skip_button);
         iconList = (RecyclerView) view.findViewById(R.id.icon_list);
         generatedIcons = generatedIconList();
         iconListAdapter = new IconAdapter(generatedIcons, this);
-        iconList.setLayoutManager(new GridLayoutManager(context, 4));
+        iconList.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         iconList.setAdapter(iconListAdapter);
         nextButton.setOnClickListener(onNextButtonListener());
         skipButton.setOnClickListener(onSkipButtonClickedListener());
         finishButton.setOnClickListener(onFinishButtonClickedListener());
+        fieldAmount.setOnKeyListener(onFieldAmountKeyListener());
+        fieldAmount.setLocale(new Locale("en_US"));
+        fieldAmount.requestFocus();
+        imm = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        return view;
     }
 
     private View.OnClickListener onNextButtonListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!infoLayout.isShown()) infoLayout.setVisibility(View.VISIBLE);
-                else {
-                    iconList.setVisibility(View.VISIBLE);
-                    finishButton.setVisibility(View.VISIBLE);
-                    stepByStepLayout.setVisibility(View.GONE);
-                }
+                nextStep();
             }
         };
+    }
+
+    private void nextStep() {
+        if (!infoLayout.isShown()) infoLayout.setVisibility(View.VISIBLE);
+        else {
+            iconList.setVisibility(View.VISIBLE);
+            finishButton.setVisibility(View.VISIBLE);
+            stepByStepLayout.setVisibility(View.GONE);
+        }
     }
 
     private View.OnClickListener onSkipButtonClickedListener() {
@@ -129,7 +151,7 @@ public class AddPaymentBottomSheet extends BottomSheetDialog implements IconSele
         Pattern pattern = Pattern.compile(patternString);
         Matcher regexMatcher = pattern.matcher(info);
         while (regexMatcher.find()) {
-            if(regexMatcher.group().length() != 0) {
+            if (regexMatcher.group().length() != 0) {
                 hashTagList.add(regexMatcher.group());
             }
         }
@@ -169,13 +191,45 @@ public class AddPaymentBottomSheet extends BottomSheetDialog implements IconSele
         refreshIcons();
         generatedIcons.get(position).setChoosen(true);
         selectedIconIndex = position;
-        this.iconId =iconId;
+        this.iconId = iconId;
         iconListAdapter.notifyDataSetChanged();
     }
 
     private void refreshIcons() {
-        for(int i = 0; i < generatedIcons.size(); i++) {
+        for (int i = 0; i < generatedIcons.size(); i++) {
             generatedIcons.get(i).setChoosen(false);
         }
     }
+
+    private View.OnKeyListener onFieldAmountKeyListener() {
+        return new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            if(infoLayout.isShown() && !fieldInfo.isSelected()) {
+                                infoLayout.requestFocus();
+                                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                            } else if(fieldInfo.isSelected()) {
+                              nextStep();
+                            } else {
+                                nextStep();
+                                infoLayout.requestFocus();
+                            }
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 }

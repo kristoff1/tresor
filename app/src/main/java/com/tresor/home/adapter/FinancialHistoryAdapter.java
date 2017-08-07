@@ -87,7 +87,11 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
                 FinancialHistoryModel financialHistoryModel = financialHistoryModelList
                         .get(position - NUMBER_OF_HEADER_ADAPTER);
                 itemHolder.historyAmount.setText(financialHistoryModel.getAmount());
-                itemHolder.historyHashtag.setText(financialHistoryModel.getHashtag());
+                String appendedHashTag = "";
+                for (int i =0; i < financialHistoryModel.getHashtag().size(); i++) {
+                    appendedHashTag += financialHistoryModel.getHashtag().get(i);
+                }
+                itemHolder.historyHashtag.setText(appendedHashTag);
                 itemHolder.historyInfo.setText(financialHistoryModel.getInfo());
                 itemHolder.historyDate.setText(financialHistoryModel.getDate());
                 setCardTheme(financialHistoryModel.getTheme(), itemHolder);
@@ -142,19 +146,28 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.spendingIcon.setImageResource(R.mipmap.ic_cat_everything_else_big);
                 break;
             case 1:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_clothing_big);
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_automotive_big);
                 break;
             case 2:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_clothing_big);
                 break;
             case 3:
                 holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
                 break;
             case 4:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_automotive_big);
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);
+                break;
+            case 5:
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_clothing_big);
+                break;
+            case 6:
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
+                break;
+            case 7:
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
                 break;
             default:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_everything_else_big);
+                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);
                 break;
         }
     }

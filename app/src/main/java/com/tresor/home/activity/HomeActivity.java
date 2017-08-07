@@ -33,8 +33,6 @@ public class HomeActivity extends TresorActivity {
 
     private LinearLayout bannerBudget;
 
-    private Toolbar homeToolbar;
-
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
     private FloatingActionButton historicalFloatingActionButton;
@@ -45,8 +43,6 @@ public class HomeActivity extends TresorActivity {
         setContentView(R.layout.home_activity);
         homeTab = (TabLayout) findViewById(R.id.home_tab);
         homePager = (ViewPager) findViewById(R.id.home_pager);
-        homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        homeToolbar.setTitle("Tresor");
         bannerBudget = (LinearLayout) findViewById(R.id.header_budget_layout);
         bannerBudget.setOnClickListener(onBannerClickedListener());
         homeTab.addTab(homeTab.newTab().setText("Spending"));

@@ -9,6 +9,7 @@
     <color name="colorContrast">#fff9c4</color>
     <color name="colorAlternative">#EBF2EA</color>
     <color name="colorDark">#5C868D</color>
+    <color name="colorTeal">#009688</color>
     <color name="textMain">#388E3C</color>
     <color name="textSecondary">#455A64</color>
     <color name="textMoney">#177c0f</color>
