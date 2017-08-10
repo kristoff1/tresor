@@ -89,6 +89,7 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
         skipButton.setOnClickListener(onSkipButtonClickedListener());
         finishButton.setOnClickListener(onFinishButtonClickedListener());
         fieldAmount.setOnKeyListener(onFieldAmountKeyListener());
+        fieldInfo.setOnKeyListener(onFieldInfoKeyListener());
         fieldAmount.setLocale(new Locale("en_US"));
         fieldAmount.requestFocus();
         imm = (InputMethodManager) getActivity()
@@ -199,6 +200,24 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
         for (int i = 0; i < generatedIcons.size(); i++) {
             generatedIcons.get(i).setChoosen(false);
         }
+    }
+
+    private View.OnKeyListener onFieldInfoKeyListener() {
+        return new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            nextStep();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        };
     }
 
     private View.OnKeyListener onFieldAmountKeyListener() {

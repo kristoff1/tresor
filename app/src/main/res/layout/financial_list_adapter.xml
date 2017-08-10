@@ -64,6 +64,8 @@
                 android:id="@+id/history_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:text="Martabak Telor Mang Udin the Conqueror 3 Paket" />
 
             <TextView
