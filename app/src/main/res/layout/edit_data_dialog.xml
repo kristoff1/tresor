@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -113,78 +114,35 @@
             android:layout_height="wrap_content"
             android:visibility="gone"/>
 
-        <LinearLayout
-            android:id="@+id/icon_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_cat_kitchen_dining_big"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_cat_clothing_big"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_cat_health_big"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_cat_automotive_big"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_cat_everything_else_big"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/step_by_step_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="right">
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/skip_button"
+                android:id="@+id/cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_small"
-                android:layout_gravity="center"
                 android:textColor="@color/colorDark"
                 android:textStyle="bold"
-                android:text="Skip"/>
+                android:text="Cancel"/>
 
             <TextView
-                android:id="@+id/next_button"
+                android:id="@+id/finish_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_small"
-                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                tools:visibility="visible"
                 android:textColor="@color/colorDark"
                 android:textStyle="bold"
-                android:text="Next"/>
+                android:text="Okay"/>
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/finish_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:layout_gravity="right"
-            android:visibility="gone"
-            android:textColor="@color/colorDark"
-            android:textStyle="bold"
-            android:text="Okay"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

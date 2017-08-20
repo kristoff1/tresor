@@ -48,8 +48,6 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
     private CurrencyEditText fieldAmount;
     private EditText fieldInfo;
     private TextView finishButton;
-    private TextView nextButton;
-    private TextView skipButton;
     private View showAllChevron;
     private NewDataAddedListener listener;
     private int selectedIconIndex = 0;
@@ -61,8 +59,16 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
 
     }
 
-    public void initiateListener(NewDataAddedListener listener) {
-        this.listener = listener;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (NewDataAddedListener) context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        listener = (NewDataAddedListener) activity;
     }
 
     @Nullable
@@ -78,8 +84,8 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
         fieldAmount = (CurrencyEditText) view.findViewById(R.id.edit_text_insert_amount);
         fieldInfo = (EditText) view.findViewById(R.id.edit_text_insert_info);
         finishButton = (TextView) view.findViewById(R.id.finish_button);
-        nextButton = (TextView) view.findViewById(R.id.next_button);
-        skipButton = (TextView) view.findViewById(R.id.skip_button);
+        TextView nextButton = (TextView) view.findViewById(R.id.next_button);
+        TextView skipButton = (TextView) view.findViewById(R.id.skip_button);
         iconList = (RecyclerView) view.findViewById(R.id.icon_list);
         generatedIcons = generatedIconList();
         iconListAdapter = new IconAdapter(generatedIcons, this);

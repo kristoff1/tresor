@@ -1,21 +1,21 @@
 package com.tresor.home.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tresor.R;
+import com.tresor.common.HashTagSuggestionAdapter;
+import com.tresor.common.model.HashTagFilterModel;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
-import com.tresor.home.bottomsheet.AddPaymentBottomSheet;
 import com.tresor.home.dialog.AddPaymentDialog;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
@@ -28,12 +28,16 @@ import java.util.List;
  * Created by kris on 5/27/17. Tokopedia
  */
 
-public class ListFinancialHistoryFragment extends Fragment implements NewDataAddedListener {
+public class ListFinancialHistoryFragment extends Fragment
+        implements NewDataAddedListener,
+        HashTagSuggestionAdapter.onSuggestedHashTagClickedListener,
+        FinancialHistoryAdapter.ListItemListener{
 
     private RecyclerView financialHistoryList;
-    private RecyclerView.Adapter financialHistoryListAdapter;
+    private FinancialHistoryAdapter financialHistoryListAdapter;
+    private RecyclerView suggestedHashTagRecyclerView;
+    private RecyclerView.Adapter suggestedHashTagAdapter;
     private List<FinancialHistoryModel> financialList;
-    private AddPaymentDialog addPaymentDialog;
     private BottomSheetDialog bottomSheetDialog;
 
     @Nullable
@@ -44,9 +48,19 @@ public class ListFinancialHistoryFragment extends Fragment implements NewDataAdd
         financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
         financialHistoryList.setHasFixedSize(true);
         financialList = financialHistoryModelList();
-        financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(), spendingDataModel());
+        financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(),
+                spendingDataModel(),
+                this);
         financialHistoryList.setAdapter(financialHistoryListAdapter);
+        financialHistoryList.setNestedScrollingEnabled(false);
 
+        suggestedHashTagRecyclerView = (RecyclerView) mainView
+                .findViewById(R.id.suggested_hash_tag_recycler_view);
+        suggestedHashTagRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.HORIZONTAL));
+        suggestedHashTagAdapter = new HashTagSuggestionAdapter(dummyHashtagListModel(), this);
+        suggestedHashTagRecyclerView.setAdapter(suggestedHashTagAdapter);
+        suggestedHashTagRecyclerView.setNestedScrollingEnabled(false);
         return mainView;
     }
 
@@ -57,11 +71,20 @@ public class ListFinancialHistoryFragment extends Fragment implements NewDataAdd
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        addPaymentDialog = new AddPaymentDialog();
-        addPaymentDialog.initiateListener(this);
+        AddPaymentDialog addPaymentDialog = new AddPaymentDialog();
         addPaymentDialog.show(ft, "dialog");
         /*bottomSheetDialog = new AddPaymentBottomSheet(getActivity(), this);
         bottomSheetDialog.show();*/
+    }
+
+    private List<FinancialHistoryModel> selectedFilter(String selectedHash) {
+        List<FinancialHistoryModel> filteredList = new ArrayList<>();
+        for (int i = 0; i<financialList.size(); i++) {
+            if(financialList.get(i).getHashTagString().contains(selectedHash)) {
+                filteredList.add(financialList.get(i));
+            }
+        }
+        return filteredList;
     }
 
     private SpendingDataModel spendingDataModel() {
@@ -83,6 +106,7 @@ public class ListFinancialHistoryFragment extends Fragment implements NewDataAdd
         List<FinancialHistoryModel> list = new ArrayList<>();
         for(int i = 0; i<8; i++) {
             FinancialHistoryModel financialHistoryModel = new FinancialHistoryModel();
+            financialHistoryModel.setAmountUnformatted(50000);
             financialHistoryModel.setAmount("Rp 50.000");
             financialHistoryModel.setDate("08.32 WIB February 17th 2017");
             List<String> hashTagList = new ArrayList<>();
@@ -100,9 +124,50 @@ public class ListFinancialHistoryFragment extends Fragment implements NewDataAdd
         return list;
     }
 
+    private List<HashTagFilterModel> dummyHashtagListModel() {
+        List<HashTagFilterModel> hashTagFilterModels = new ArrayList<>();
+        for(int i = 0; i < dummySuggestedHashTagList().size(); i++) {
+            HashTagFilterModel model = new HashTagFilterModel();
+            model.setHashTagString(dummySuggestedHashTagList().get(i));
+            model.setSelected(false);
+            hashTagFilterModels.add(model);
+        }
+        return hashTagFilterModels;
+    }
+
+    private List<String> dummySuggestedHashTagList() {
+        List<String> dummyHashTag = new ArrayList<>();
+        dummyHashTag.add("#Makan");
+        dummyHashTag.add("#Siang");
+        dummyHashTag.add("#Alalalalala");
+        dummyHashTag.add("#Ajebajeb");
+        dummyHashTag.add("#ClubbingNyeeeet");
+        dummyHashTag.add("#LalalaFest");
+        return dummyHashTag;
+    }
+
     @Override
     public void onDataAdded(FinancialHistoryModel newData) {
         financialList.add(0, newData);
         financialHistoryListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void hashTagSelected(String selectedHashtag) {
+        financialHistoryListAdapter.updateData(selectedFilter(selectedHashtag));
+        financialHistoryListAdapter.notifyDataSetChanged();
+        suggestedHashTagAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void clearFilter() {
+        financialHistoryListAdapter.updateData(financialList);
+        financialHistoryListAdapter.notifyDataSetChanged();
+        suggestedHashTagAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(FinancialHistoryModel itemModel) {
+
     }
 }

@@ -31,7 +31,7 @@ public class HomeActivity extends TresorActivity {
 
     private TabLayout homeTab;
 
-    private LinearLayout bannerBudget;
+    //private LinearLayout bannerBudget;
 
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
@@ -43,8 +43,8 @@ public class HomeActivity extends TresorActivity {
         setContentView(R.layout.home_activity);
         homeTab = (TabLayout) findViewById(R.id.home_tab);
         homePager = (ViewPager) findViewById(R.id.home_pager);
-        bannerBudget = (LinearLayout) findViewById(R.id.header_budget_layout);
-        bannerBudget.setOnClickListener(onBannerClickedListener());
+        //bannerBudget = (LinearLayout) findViewById(R.id.header_budget_layout);
+        //bannerBudget.setOnClickListener(onBannerClickedListener());
         homeTab.addTab(homeTab.newTab().setText("Spending"));
         homeTab.addTab(homeTab.newTab().setText("History"));
         homeTab.addTab(homeTab.newTab().setText("Statistic"));
@@ -102,7 +102,7 @@ public class HomeActivity extends TresorActivity {
         };
     }
 
-    private View.OnClickListener onBannerClickedListener() {
+    /*private View.OnClickListener onBannerClickedListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +116,6 @@ public class HomeActivity extends TresorActivity {
                 //TODO make transition animation
             }
         };
-    }
+    }*/
 
 }

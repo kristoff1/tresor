@@ -2,8 +2,10 @@ package com.tresor.home.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,16 +28,20 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private SpendingDataModel spendingDataModel;
     private List<FinancialHistoryModel> financialHistoryModelList;
+    private ListItemListener listener;
 
     private static final int NUMBER_OF_HEADER_ADAPTER = 1;
 
     private static final int HEADER_ADAPTER = 0;
     private static final int ITEM_ADAPTER = 1;
 
-    public FinancialHistoryAdapter(Context context, SpendingDataModel spendingDataModel) {
+    public FinancialHistoryAdapter(Context context,
+                                   SpendingDataModel spendingDataModel,
+                                   ListItemListener listener) {
         this.context = context;
         this.spendingDataModel = spendingDataModel;
         this.financialHistoryModelList = spendingDataModel.getFinancialHistoryModelList();
+        this.listener = listener;
     }
 
     @Override
@@ -64,7 +70,7 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
             case HEADER_ADAPTER:
                 FinancialHistoryHeaderHolder headerHolder = (FinancialHistoryHeaderHolder) holder;
                 SpendingDataModel spendingData = spendingDataModel;
-                headerHolder.totalExpense.setText(spendingData.getTotalSpendingString());
+                headerHolder.totalExpense.setText(totalAllocatedMoney());
                 //TODO SIMPLIFY!!!!
                 if(spendingData.isHistory()) {
                     headerHolder.allocatedSpendingLayout.setVisibility(View.GONE);
@@ -94,6 +100,11 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
                 itemHolder.historyHashtag.setText(appendedHashTag);
                 itemHolder.historyInfo.setText(financialHistoryModel.getInfo());
                 itemHolder.historyDate.setText(financialHistoryModel.getDate());
+                itemHolder.optionMenu.setOnClickListener(onOptionClickedListener(position
+                        - NUMBER_OF_HEADER_ADAPTER));
+                itemHolder.itemPlaceHolder.setOnClickListener(
+                        onMainViewClickedListener(financialHistoryModel)
+                );
                 setCardTheme(financialHistoryModel.getTheme(), itemHolder);
                 break;
         }
@@ -104,13 +115,14 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         return financialHistoryModelList.size() + NUMBER_OF_HEADER_ADAPTER;
     }
 
-    class FinancialHistoryViewHolder extends RecyclerView.ViewHolder {
+    private class FinancialHistoryViewHolder extends RecyclerView.ViewHolder {
         private TextView historyAmount;
         private TextView historyHashtag;
         private TextView historyInfo;
         private TextView historyDate;
         private CardView itemPlaceHolder;
         private ImageView spendingIcon;
+        private View optionMenu;
 
         FinancialHistoryViewHolder(View itemView) {
             super(itemView);
@@ -120,10 +132,11 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
             historyDate = (TextView) itemView.findViewById(R.id.history_date);
             itemPlaceHolder = (CardView) itemView.findViewById(R.id.item_place_holder);
             spendingIcon = (ImageView) itemView.findViewById(R.id.spending_icon);
+            optionMenu = itemView.findViewById(R.id.option_button);
         }
     }
 
-    class FinancialHistoryHeaderHolder extends RecyclerView.ViewHolder {
+    private class FinancialHistoryHeaderHolder extends RecyclerView.ViewHolder {
         private LinearLayout allocatedSpendingLayout;
         private LinearLayout saveMoneyLayout;
         private TextView totalAllocated;
@@ -170,6 +183,55 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);
                 break;
         }
+    }
+
+    public void updateData(List<FinancialHistoryModel> financialHistoryModelList) {
+        this.financialHistoryModelList = financialHistoryModelList;
+    }
+
+    private String totalAllocatedMoney() {
+        int total = 0;
+        for(int i =0; i < financialHistoryModelList.size(); i++) {
+            total +=financialHistoryModelList.get(i).getAmountUnformatted();
+        }
+        return String.valueOf(total);
+    }
+
+    private View.OnClickListener onOptionClickedListener(final int position) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu menu = new PopupMenu(context, v);
+                menu.getMenuInflater().inflate(R.menu.history_setting_menu, menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.delete_list) {
+                            //TODO
+                            // make menu
+                            financialHistoryModelList.remove(position);
+                            notifyDataSetChanged();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                menu.show();
+            }
+        };
+    }
+
+    private View.OnClickListener onMainViewClickedListener(final FinancialHistoryModel model) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(model);
+            }
+        };
+    }
+
+    public interface ListItemListener {
+        void onClick(FinancialHistoryModel itemModel);
     }
 
 }

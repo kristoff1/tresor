@@ -38,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_title"
-                android:textColor="@color/textMoneyExpense"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="Rp 200.000"/>

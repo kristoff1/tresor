@@ -20,23 +20,24 @@
 
             <ImageView
                 android:id="@+id/spending_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_cat_everything_else_big"
                 android:layout_marginRight="@dimen/margin_vs"
-                android:layout_marginEnd="@dimen/margin_vs"/>
+                android:layout_marginEnd="@dimen/margin_vs"
+                android:layout_weight="1"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="3">
 
                 <TextView
                     android:id="@+id/history_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rp 50.000"
-                    android:textColor="@color/textMoneyExpense"
                     android:textSize="@dimen/text_title"
                     android:textStyle="bold" />
 
@@ -47,6 +48,20 @@
                     android:layout_height="wrap_content"
                     android:text="#Makan #Siang #Liburan" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_weight="1"
+                android:gravity="end">
+                <ImageView
+                    android:id="@+id/option_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_new_action_overflow_black"/>
             </LinearLayout>
 
         </LinearLayout>

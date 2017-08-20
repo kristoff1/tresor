@@ -25,6 +25,8 @@ public class FinancialHistoryModel {
 
     private int theme;
 
+    private String hashTagString;
+
     public String getAmount() {
         return amount;
     }
@@ -87,5 +89,19 @@ public class FinancialHistoryModel {
 
     public void setTheme(int theme) {
         this.theme = theme;
+    }
+
+    public String getHashTagString() {
+        String joinHashTag = "";
+        if(hashtag !=null && hashtag.size() > 0) {
+            for (int i = 0; i<hashtag.size(); i++) {
+                joinHashTag += hashtag.get(i);
+            }
+        }
+        return joinHashTag;
+    }
+
+    public void setHashTagString(String hashTagString) {
+        this.hashTagString = hashTagString;
     }
 }
