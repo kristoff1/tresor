@@ -17,6 +17,7 @@ import com.tresor.common.HashTagSuggestionAdapter;
 import com.tresor.common.model.HashTagFilterModel;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
 import com.tresor.home.dialog.AddPaymentDialog;
+import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.SpendingDataModel;
@@ -29,9 +30,8 @@ import java.util.List;
  */
 
 public class ListFinancialHistoryFragment extends Fragment
-        implements NewDataAddedListener,
-        HashTagSuggestionAdapter.onSuggestedHashTagClickedListener,
-        FinancialHistoryAdapter.ListItemListener{
+        implements HashTagSuggestionAdapter.onSuggestedHashTagClickedListener,
+        FinancialHistoryAdapter.ListItemListener {
 
     private RecyclerView financialHistoryList;
     private FinancialHistoryAdapter financialHistoryListAdapter;
@@ -146,7 +146,6 @@ public class ListFinancialHistoryFragment extends Fragment
         return dummyHashTag;
     }
 
-    @Override
     public void onDataAdded(FinancialHistoryModel newData) {
         financialList.add(0, newData);
         financialHistoryListAdapter.notifyDataSetChanged();
@@ -168,6 +167,17 @@ public class ListFinancialHistoryFragment extends Fragment
 
     @Override
     public void onClick(FinancialHistoryModel itemModel) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("edit_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        EditPaymentDialog editPaymentDialog = EditPaymentDialog.createEditPaymentDialog(itemModel);
+        editPaymentDialog.show(ft, "edit_dialog");
+    }
 
+    public void onItemEdited() {
+        financialHistoryListAdapter.notifyDataSetChanged();
     }
 }

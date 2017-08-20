@@ -16,16 +16,20 @@ import android.widget.LinearLayout;
 
 import com.tresor.R;
 import com.tresor.common.TresorActivity;
+import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.fragment.SearchFragment;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
 import com.tresor.home.fragment.StatisticFragment;
+import com.tresor.home.inteface.NewDataAddedListener;
+import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.profile.ProfilePageActivity;
 
 /**
  * Created by kris on 5/27/17. Tokopedia
  */
 
-public class HomeActivity extends TresorActivity {
+public class HomeActivity extends TresorActivity
+        implements NewDataAddedListener, EditPaymentDialog.EditItemListener {
 
     private ViewPager homePager;
 
@@ -100,6 +104,16 @@ public class HomeActivity extends TresorActivity {
                 return homeTab.getTabCount();
             }
         };
+    }
+
+    @Override
+    public void onDataAdded(FinancialHistoryModel newData) {
+        listFinancialHistoryFragment.onDataAdded(newData);
+    }
+
+    @Override
+    public void onItemEdited() {
+        listFinancialHistoryFragment.onItemEdited();
     }
 
     /*private View.OnClickListener onBannerClickedListener() {

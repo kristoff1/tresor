@@ -190,7 +190,7 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private String totalAllocatedMoney() {
-        int total = 0;
+        double total = 0;
         for(int i =0; i < financialHistoryModelList.size(); i++) {
             total +=financialHistoryModelList.get(i).getAmountUnformatted();
         }

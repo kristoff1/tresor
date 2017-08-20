@@ -24,6 +24,7 @@ import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.IconModel;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -146,6 +147,11 @@ public class AddPaymentDialog extends DialogFragment implements IconSelectetionL
                 model.setInfo(info);
                 model.setAmount(price);
                 model.setHashtag(hashTagList);
+                try {
+                    model.setAmountUnformatted(fieldAmount.getCurrencyDouble());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 model.setTheme(iconId);
                 listener.onDataAdded(model);
                 dismiss();

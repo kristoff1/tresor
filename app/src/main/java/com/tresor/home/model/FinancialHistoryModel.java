@@ -1,5 +1,8 @@
 package com.tresor.home.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +10,11 @@ import java.util.List;
  * Created by kris on 5/28/17. Tokopedia
  */
 
-public class FinancialHistoryModel {
+public class FinancialHistoryModel implements Parcelable{
 
     private String amount;
 
-    private int amountUnformatted;
+    private double amountUnformatted;
 
     private boolean usesComma;
 
@@ -27,15 +30,43 @@ public class FinancialHistoryModel {
 
     private String hashTagString;
 
+    public FinancialHistoryModel() {
+
+    }
+
+    protected FinancialHistoryModel(Parcel in) {
+        amount = in.readString();
+        amountUnformatted = in.readInt();
+        usesComma = in.readByte() != 0;
+        currencyId = in.readInt();
+        hashtag = in.createStringArrayList();
+        info = in.readString();
+        date = in.readString();
+        theme = in.readInt();
+        hashTagString = in.readString();
+    }
+
+    public static final Creator<FinancialHistoryModel> CREATOR = new Creator<FinancialHistoryModel>() {
+        @Override
+        public FinancialHistoryModel createFromParcel(Parcel in) {
+            return new FinancialHistoryModel(in);
+        }
+
+        @Override
+        public FinancialHistoryModel[] newArray(int size) {
+            return new FinancialHistoryModel[size];
+        }
+    };
+
     public String getAmount() {
         return amount;
     }
 
-    public int getAmountUnformatted() {
+    public double getAmountUnformatted() {
         return amountUnformatted;
     }
 
-    public void setAmountUnformatted(int amountUnformatted) {
+    public void setAmountUnformatted(double amountUnformatted) {
         this.amountUnformatted = amountUnformatted;
     }
 
@@ -103,5 +134,23 @@ public class FinancialHistoryModel {
 
     public void setHashTagString(String hashTagString) {
         this.hashTagString = hashTagString;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(amount);
+        dest.writeDouble(amountUnformatted);
+        dest.writeByte((byte) (usesComma ? 1 : 0));
+        dest.writeInt(currencyId);
+        dest.writeStringList(hashtag);
+        dest.writeString(info);
+        dest.writeString(date);
+        dest.writeInt(theme);
+        dest.writeString(hashTagString);
     }
 }
