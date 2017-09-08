@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.tresor.R;
 import com.tresor.common.TresorActivity;
+import com.tresor.common.utils.DateEditor;
 import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.fragment.SearchFragment;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
@@ -23,19 +24,24 @@ import com.tresor.home.fragment.StatisticFragment;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.profile.ProfilePageActivity;
+import com.tresor.statistic.dialog.TimePickerDialogFragment;
 
 /**
  * Created by kris on 5/27/17. Tokopedia
  */
 
 public class HomeActivity extends TresorActivity
-        implements NewDataAddedListener, EditPaymentDialog.EditItemListener {
+        implements NewDataAddedListener,
+        EditPaymentDialog.EditItemListener, TimePickerDialogFragment.DatePickerListener{
 
+    public static final int STATISTIC_FRAGMENT_POSITION = 2;
     private ViewPager homePager;
 
     private TabLayout homeTab;
 
     //private LinearLayout bannerBudget;
+
+    private StatisticFragment statisticFragment;
 
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
@@ -92,7 +98,8 @@ public class HomeActivity extends TresorActivity
                     case 1:
                         return new SearchFragment();
                     case 2:
-                        return new StatisticFragment();
+                        statisticFragment = new StatisticFragment();
+                        return statisticFragment;
                     default:
                         listFinancialHistoryFragment = new ListFinancialHistoryFragment();
                         return listFinancialHistoryFragment;
@@ -114,6 +121,22 @@ public class HomeActivity extends TresorActivity
     @Override
     public void onItemEdited() {
         listFinancialHistoryFragment.onItemEdited();
+    }
+
+    @Override
+    public void onDateSelected(int mode, int year, int month, int dayOfMonth) {
+        if(mode == TimePickerDialogFragment.START_DATE_MODE
+                || mode == TimePickerDialogFragment.END_DATE_MODE) {
+
+            /*((StatisticFragment)homePagerAdapter(getFragmentManager())
+                    .getItem(STATISTIC_FRAGMENT_POSITION))
+                    .onDateSelected(mode, year, DateEditor.editMonth(this, month), dayOfMonth);*/
+
+            statisticFragment.onDateSelected(mode,
+                    year,
+                    DateEditor.editMonth(this, month),
+                    dayOfMonth);
+        }
     }
 
     /*private View.OnClickListener onBannerClickedListener() {

@@ -40,6 +40,10 @@ public class ListFinancialHistoryFragment extends Fragment
     private List<FinancialHistoryModel> financialList;
     private BottomSheetDialog bottomSheetDialog;
 
+    public static ListFinancialHistoryFragment createFragment() {
+        return new ListFinancialHistoryFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
