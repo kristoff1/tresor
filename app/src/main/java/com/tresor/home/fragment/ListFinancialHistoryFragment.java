@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -65,6 +66,14 @@ public class ListFinancialHistoryFragment extends Fragment
         suggestedHashTagAdapter = new HashTagSuggestionAdapter(dummyHashtagListModel(), this);
         suggestedHashTagRecyclerView.setAdapter(suggestedHashTagAdapter);
         suggestedHashTagRecyclerView.setNestedScrollingEnabled(false);
+        FloatingActionButton historicalFloatingActionButton = (FloatingActionButton)
+                mainView.findViewById(R.id.history_floating_action_button);
+        historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onHomeButtonFabClicked();
+            }
+        });
         return mainView;
     }
 
@@ -152,7 +161,17 @@ public class ListFinancialHistoryFragment extends Fragment
 
     public void onDataAdded(FinancialHistoryModel newData) {
         financialList.add(0, newData);
-        financialHistoryListAdapter.notifyDataSetChanged();
+        financialHistoryListAdapter
+                .notifyItemInserted(FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER);
+        financialHistoryListAdapter
+                .notifyItemRangeInserted(
+                        FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER,
+                        financialList.size() + FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER
+                );
+        financialHistoryList.scrollToPosition(FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER);
+
+        //TODO RELEASE IF ANIMATION CAUSES MUCH BUGS
+        //financialHistoryListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -177,7 +196,8 @@ public class ListFinancialHistoryFragment extends Fragment
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        EditPaymentDialog editPaymentDialog = EditPaymentDialog.createEditPaymentDialog(itemModel);
+        EditPaymentDialog editPaymentDialog = EditPaymentDialog
+                .createEditPaymentDialog(itemModel);
         editPaymentDialog.show(ft, "edit_dialog");
     }
 

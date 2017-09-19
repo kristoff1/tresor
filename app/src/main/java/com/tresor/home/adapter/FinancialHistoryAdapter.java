@@ -30,7 +30,7 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
     private List<FinancialHistoryModel> financialHistoryModelList;
     private ListItemListener listener;
 
-    private static final int NUMBER_OF_HEADER_ADAPTER = 1;
+    public static final int NUMBER_OF_HEADER_ADAPTER = 1;
 
     private static final int HEADER_ADAPTER = 0;
     private static final int ITEM_ADAPTER = 1;
@@ -207,10 +207,11 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.delete_list) {
-                            //TODO
-                            // make menu
                             financialHistoryModelList.remove(position);
-                            notifyDataSetChanged();
+                            //TODO change to notify dataset change if keep error
+                            notifyItemRemoved(position + NUMBER_OF_HEADER_ADAPTER);
+                            notifyItemRangeChanged(position + NUMBER_OF_HEADER_ADAPTER,
+                                    financialHistoryModelList.size() + NUMBER_OF_HEADER_ADAPTER);
                             return true;
                         }
                         return false;

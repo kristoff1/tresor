@@ -62,11 +62,11 @@ public class TotalUsageLineChart extends LinearLayout {
         highlightedSpending = (TextView) view.findViewById(R.id.highlighted_spending);
         goToDetailButton = (TextView) view.findViewById(R.id.go_to_detail_button);
         hashTagLineChart.getAxisLeft().setDrawGridLines(false);
+        hashTagLineChart.getAxisLeft().setDrawLabels(false);
         hashTagLineChart.getXAxis().setDrawGridLines(false);
         hashTagLineChart.getLegend().setEnabled(false);
         hashTagLineChart.setDrawGridBackground(false);
         hashTagLineChart.getAxisRight().setDrawGridLines(false);
-        hashTagLineChart.getAxisRight().setDrawLabels(false);
         hashTagLineChart.getDescription().setTextSize(16);
     }
 

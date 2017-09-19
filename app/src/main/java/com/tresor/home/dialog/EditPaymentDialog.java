@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tresor.R;
+import com.tresor.common.dialog.NoTitleDialogFragment;
 import com.tresor.home.bottomsheet.IconAdapter;
 import com.tresor.home.inteface.IconSelectetionListener;
 import com.tresor.home.model.FinancialHistoryModel;
@@ -31,7 +32,7 @@ import faranjit.currency.edittext.CurrencyEditText;
  * Created by kris on 8/20/17. Tokopedia
  */
 
-public class EditPaymentDialog extends DialogFragment implements IconSelectetionListener{
+public class EditPaymentDialog extends NoTitleDialogFragment implements IconSelectetionListener{
 
     private static final String FINANCIAL_MODEL_KEY = "FINANCIAL_MODEL_KEY";
 

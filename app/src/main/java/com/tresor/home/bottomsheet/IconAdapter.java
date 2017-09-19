@@ -74,6 +74,7 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.ImageHolder>{
     }
 
     private void setIconImage(ImageView image, int imageId) {
+        //TODO make function to pair data id with drawable id CODE RED
         switch (imageId) {
             case 0:
                 image.setImageResource((R.mipmap.ic_cat_everything_else_big));

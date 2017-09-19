@@ -90,7 +90,7 @@ public class StatisticFragment extends Fragment {
         endDateField.setText(DateEditor
                 .dayMonthNameYearFormatter(currentDate, currentMonth, currentYear));
         hashTagPieChart.setChartData(getActivity(), hashTagStatisticModelList());
-        hashTagUsageLineChart.setLineChart(getActivity());
+        hashTagUsageLineChart.setLineChart(getActivity(), hashTagStatisticModelList());
         totalUsageLineChart.setData(getActivity());
     }
 
@@ -223,7 +223,7 @@ public class StatisticFragment extends Fragment {
         if(!startDateField.getText().toString().equals("")
                 && !endDateField.getText().toString().equals("")) {
             hashTagPieChart.setChartData(getActivity(), hashTagStatisticModelList());
-            hashTagUsageLineChart.setLineChart(getActivity());
+            hashTagUsageLineChart.setLineChart(getActivity(), hashTagStatisticModelList());
             totalUsageLineChart.setData(getActivity());
         }
     }

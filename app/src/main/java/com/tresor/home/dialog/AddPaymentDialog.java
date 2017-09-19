@@ -1,6 +1,7 @@
 package com.tresor.home.dialog;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tresor.R;
+import com.tresor.common.dialog.NoTitleDialogFragment;
 import com.tresor.home.bottomsheet.IconAdapter;
 import com.tresor.home.inteface.IconSelectetionListener;
 import com.tresor.home.inteface.NewDataAddedListener;
@@ -37,7 +40,7 @@ import faranjit.currency.edittext.CurrencyEditText;
  * Created by kris on 7/16/17. Tokopedia
  */
 
-public class AddPaymentDialog extends DialogFragment implements IconSelectetionListener {
+public class AddPaymentDialog extends NoTitleDialogFragment implements IconSelectetionListener {
 
     private LinearLayout amountLayout;
     private LinearLayout iconLayout;

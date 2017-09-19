@@ -13,6 +13,7 @@
     <dimen name="margin_vs">6dp</dimen>
     <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_medium">14dp</dimen>
+    <dimen name="margin_large">18dp</dimen>
 
     <dimen name="edit_text_height">44dp</dimen>
     <dimen name="adapter_height">44dp</dimen>

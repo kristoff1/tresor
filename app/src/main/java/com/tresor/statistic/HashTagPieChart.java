@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -47,6 +48,7 @@ public class HashTagPieChart extends LinearLayout{
         View view =  inflater.inflate(R.layout.view_pie_chart, this, true);
         pieChart = (PieChart) view
                 .findViewById(R.id.hashtag_pie_chart);
+        pieChart.setDrawHoleEnabled(false);
     }
 
     public void setChartData(Context context, List<HashTagStatisticModel> statisticModels) {
@@ -90,5 +92,38 @@ public class HashTagPieChart extends LinearLayout{
             amount += hashTagStatisticList.get(i).getTotalPeriodicAmount();
         }
         return amount;
+    }
+
+    private void setIconImage(ImageView image, int imageId) {
+        //TODO make function to pair data id with drawable id CODE RED
+        switch (imageId) {
+            case 0:
+                image.setImageResource((R.mipmap.ic_cat_everything_else_big));
+                break;
+            case 1:
+                image.setImageResource((R.mipmap.ic_cat_automotive_big));
+                break;
+            case 2:
+                image.setImageResource((R.mipmap.ic_cat_clothing_big));
+                break;
+            case 3:
+                image.setImageResource((R.mipmap.ic_cat_health_big));
+                break;
+            case 4:
+                image.setImageResource((R.mipmap.ic_cat_kitchen_dining_big));
+                break;
+            case 5:
+                image.setImageResource((R.mipmap.ic_cat_clothing_big));
+                break;
+            case 6:
+                image.setImageResource((R.mipmap.ic_cat_health_big));
+                break;
+            case 7:
+                image.setImageResource((R.mipmap.ic_cat_kitchen_dining_big));
+                break;
+            default:
+                image.setImageResource((R.mipmap.ic_cat_everything_else_big));
+                break;
+        }
     }
 }

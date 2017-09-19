@@ -45,8 +45,6 @@ public class HomeActivity extends TresorActivity
 
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
-    private FloatingActionButton historicalFloatingActionButton;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,14 +73,6 @@ public class HomeActivity extends TresorActivity
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
-        historicalFloatingActionButton = (FloatingActionButton)
-                findViewById(R.id.history_floating_action_button);
-        historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listFinancialHistoryFragment.onHomeButtonFabClicked();
             }
         });
     }

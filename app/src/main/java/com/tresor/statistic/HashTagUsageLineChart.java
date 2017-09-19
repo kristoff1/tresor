@@ -1,5 +1,8 @@
 package com.tresor.statistic;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -7,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -16,6 +20,9 @@ import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.tresor.R;
+import com.tresor.home.model.HashTagStatisticModel;
+import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
+import com.tresor.statistic.dialog.AnalyzeHashTagSpendingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +34,8 @@ import java.util.List;
 public class HashTagUsageLineChart extends LinearLayout{
 
     private LineChart hashTagLineChart;
+    private TextView selectHashTagButton;
+    private Context context;
 
     public HashTagUsageLineChart(Context context) {
         super(context);
@@ -47,13 +56,16 @@ public class HashTagUsageLineChart extends LinearLayout{
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view =  inflater.inflate(R.layout.view_multi_line_chart, this, true);
+        this.context = context;
+        selectHashTagButton = (TextView) view.findViewById(R.id.select_hastag_button);
+        selectHashTagButton.setOnClickListener(onHashTagButtonClickedListener());
         hashTagLineChart = (LineChart) view.findViewById(R.id.hashtag_multi_line_chart);
         hashTagLineChart.setDrawGridBackground(false);
         hashTagLineChart.getAxisLeft().setDrawGridLines(false);
         hashTagLineChart.getXAxis().setDrawGridLines(false);
     }
 
-    public void setLineChart(Context context) {
+    public void setLineChart(Context context, List<HashTagStatisticModel> statisticModels) {
         LineData lineData = new LineData(multipleHashtagLine(context));
         lineData.setDrawValues(false);
         hashTagLineChart.setData(lineData);
@@ -122,5 +134,29 @@ public class HashTagUsageLineChart extends LinearLayout{
                 return -10;
             }
         });
+    }
+
+    private OnClickListener onHashTagButtonClickedListener() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction ft = ((Activity)context).getFragmentManager().beginTransaction();
+                Fragment prev = ((Activity)context).getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                AnalyzeHashTagSpendingDialog analyzeDialog = AnalyzeHashTagSpendingDialog.createDialog(dummyTop5HashTagList());
+                analyzeDialog.show(ft, "dialog");
+            }
+        };
+    }
+
+    private ArrayList<String> dummyTop5HashTagList() {
+        ArrayList<String> dummyList = new ArrayList<>();
+        dummyList.add("#makan");
+        dummyList.add("#makanterus");
+        dummyList.add("#makansampendut");
+        return dummyList;
     }
 }
