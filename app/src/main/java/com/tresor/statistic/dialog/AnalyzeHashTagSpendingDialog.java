@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import com.tresor.R;
 import com.tresor.common.utils.TresorExecutor;
 import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
+import com.tresor.statistic.adapter.AnalyzeHashTagAutoCompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
 
     private CompositeDisposable compositeDisposable;
 
-    private ArrayAdapter<String> arrayAdapter;
+    private AnalyzeHashTagAutoCompleteAdapter arrayAdapter;
 
     private List<String> listOfHashTag;
 
@@ -77,9 +78,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyze_hashtag_dialog, container);
         listOfHashTag = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_dropdown_item,
-                listOfHashTag);
+        arrayAdapter = new AnalyzeHashTagAutoCompleteAdapter(getActivity());
         RecyclerView selectedHashTagRecyclerView = (RecyclerView)
                 view.findViewById(R.id.selected_hash_tag_recycler_view);
         AutoCompleteTextView hashTagCompleteView = (AutoCompleteTextView)
@@ -91,7 +90,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         initiateDisposable();
         selectedHashTagRecyclerView.setAdapter(analyzeHashTagAdapter);
         selectedHashTagRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        analyzeHashTagAdapter.notifyDataSetChanged();;
+        analyzeHashTagAdapter.notifyDataSetChanged();
         hashTagCompleteView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,8 +133,8 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
                         listOfHashTag.add("#makan " + s);
                         listOfHashTag.add("#gemuk " + s);
                         listOfHashTag.add("#kawai " + s);
-                        arrayAdapter.clear();
-                        arrayAdapter.addAll(listOfHashTag);
+                        arrayAdapter.updateData(listOfHashTag);
+                        arrayAdapter.notifyDataSetChanged();
                     }
 
                     @Override

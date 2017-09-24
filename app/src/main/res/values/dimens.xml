@@ -17,4 +17,5 @@
 
     <dimen name="edit_text_height">44dp</dimen>
     <dimen name="adapter_height">44dp</dimen>
+    <dimen name="auto_complete_adapter_height">22dp</dimen>
 </resources>
