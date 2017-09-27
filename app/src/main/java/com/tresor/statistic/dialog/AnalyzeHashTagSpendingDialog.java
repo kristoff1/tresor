@@ -7,31 +7,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.tresor.R;
-import com.tresor.common.utils.TresorExecutor;
+import com.tresor.common.widget.DebouncingAutoCompleteTextView;
+import com.tresor.home.fragment.StatisticFragment;
 import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
-import com.tresor.statistic.adapter.AnalyzeHashTagAutoCompleteAdapter;
+import com.tresor.statistic.adapter.AutoCompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kris on 9/10/17. Tokopedia
@@ -41,15 +31,9 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
 
     private static final String HASH_TAG_LIST_KEY = "hash_tag_list_key";
 
-    private AnalyzeHashTagAdapter analyzeHashTagAdapter;
-
     private CompositeDisposable compositeDisposable;
 
-    private AnalyzeHashTagAutoCompleteAdapter arrayAdapter;
-
-    private List<String> listOfHashTag;
-
-    private textChangedListener listener;
+    private AnalyzeHashTagDialogListener listener;
 
     public static AnalyzeHashTagSpendingDialog createDialog(ArrayList<String> hashTagList) {
         AnalyzeHashTagSpendingDialog dialog = new AnalyzeHashTagSpendingDialog();
@@ -59,99 +43,120 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         return dialog;
     }
 
-    private interface textChangedListener {
-        void onQueryTextChanged(String query);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        listener = (AnalyzeHashTagDialogListener) context;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        listener = (AnalyzeHashTagDialogListener) activity;
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.analyze_hashtag_dialog, container);
-        listOfHashTag = new ArrayList<>();
-        arrayAdapter = new AnalyzeHashTagAutoCompleteAdapter(getActivity());
-        RecyclerView selectedHashTagRecyclerView = (RecyclerView)
-                view.findViewById(R.id.selected_hash_tag_recycler_view);
-        AutoCompleteTextView hashTagCompleteView = (AutoCompleteTextView)
-                view.findViewById(R.id.add_new_hash_tag_auto_complete);
-        hashTagCompleteView.setAdapter(arrayAdapter);
-        analyzeHashTagAdapter = new AnalyzeHashTagAdapter(getArguments()
-                .getStringArrayList(HASH_TAG_LIST_KEY));
-        arrayAdapter.notifyDataSetChanged();
-        initiateDisposable();
-        selectedHashTagRecyclerView.setAdapter(analyzeHashTagAdapter);
-        selectedHashTagRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        analyzeHashTagAdapter.notifyDataSetChanged();
-        hashTagCompleteView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        compositeDisposable = new CompositeDisposable();
 
-            }
+        List<String> autoCompleteList = new ArrayList<>();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        List<String> analyzedHashTagList = getArguments().getStringArrayList(HASH_TAG_LIST_KEY);
 
-            }
+        initView(view, autoCompleteList, analyzedHashTagList);
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(listener != null) {
-                    listener.onQueryTextChanged(s.toString());
-                }
-            }
-        });
         return view;
     }
 
-    private void initiateDisposable() {
-        compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(Observable.create(new ObservableOnSubscribe<String>() {
+    private void initView(View view, List<String> listOfHashTag, List<String> analyzedHashTagList) {
+        RecyclerView hashTagList = (RecyclerView) view.findViewById(R.id.selected_hash_tag_list);
+        DebouncingAutoCompleteTextView autoCompleteTextView = (DebouncingAutoCompleteTextView)
+                view.findViewById(R.id.add_new_hash_tag_auto_complete);
+        ImageView addButton = (ImageView) view.findViewById(R.id.add_new_hash_tag_button);
+        TextView okayButton = (TextView) view.findViewById(R.id.okay_button);
+
+        AnalyzeHashTagAdapter analyzeHashTagAdapter = new AnalyzeHashTagAdapter(analyzedHashTagList);
+        AutoCompleteAdapter arrayAdapter = new AutoCompleteAdapter(getActivity());
+
+        setupAtutoCompleteTextView(listOfHashTag, autoCompleteTextView, arrayAdapter);
+        setupHashTagListProperties(hashTagList, analyzeHashTagAdapter);
+
+        addButton.setOnClickListener(addButtonListener(
+                analyzeHashTagAdapter, autoCompleteTextView)
+        );
+        okayButton.setOnClickListener(onOkayButtonClickedListener(analyzedHashTagList));
+    }
+
+    private void setupHashTagListProperties(RecyclerView hashTagList, AnalyzeHashTagAdapter analyzeHashTagAdapter) {
+        hashTagList.setAdapter(analyzeHashTagAdapter);
+        hashTagList.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    private void setupAtutoCompleteTextView(List<String> listOfHashTag, DebouncingAutoCompleteTextView autoCompleteTextView, AutoCompleteAdapter arrayAdapter) {
+        autoCompleteTextView.initListener(
+                compositeDisposable,
+                debouncingAutoCompleteListener(arrayAdapter, listOfHashTag)
+        );
+
+        autoCompleteTextView.setAdapter(arrayAdapter);
+    }
+
+    private DebouncingAutoCompleteTextView
+            .DebouncingAutoCompleteListener debouncingAutoCompleteListener(
+            final AutoCompleteAdapter arrayAdapter,
+            final List<String> listOfHashTag) {
+        return new DebouncingAutoCompleteTextView.DebouncingAutoCompleteListener() {
             @Override
-            public void subscribe(@NonNull final ObservableEmitter<String> subscriber) throws Exception {
-                listener = new textChangedListener() {
-                    @Override
-                    public void onQueryTextChanged(String query) {
-                        subscriber.onNext(query);
-                    }
-                };
+            public void finishedTyping(String query) {
+                //TODO Connect to Network Here
+                listOfHashTag.clear();
+                listOfHashTag.add("#makan" + query);
+                listOfHashTag.add("#gemuk" + query);
+                listOfHashTag.add("#kawai" + query);
+                arrayAdapter.updateData(listOfHashTag);
+                arrayAdapter.notifyDataSetChanged();
             }
-        }).debounce(500, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(@NonNull String s) {
-                        listOfHashTag.clear();
-                        listOfHashTag.add("#makan " + s);
-                        listOfHashTag.add("#gemuk " + s);
-                        listOfHashTag.add("#kawai " + s);
-                        arrayAdapter.updateData(listOfHashTag);
-                        arrayAdapter.notifyDataSetChanged();
-                    }
 
-                    @Override
-                    public void onError(@NonNull Throwable e) {
+            @Override
+            public void onTypingError(Throwable e) {
 
-                    }
+            }
+        };
+    }
 
-                    @Override
-                    public void onComplete() {
+    private View.OnClickListener addButtonListener(
+            final AnalyzeHashTagAdapter adapter,
+            final DebouncingAutoCompleteTextView textView
+    ) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.addNewItem(textView.getText().toString());
+                adapter.notifyDataSetChanged();
+            }
+        };
+    }
 
-                    }
-                }));
+    private View.OnClickListener onOkayButtonClickedListener(final List<String> listHashTag) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onFinishChoosingSpendingDialog(listHashTag);
+                dismiss();
+            }
+        };
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
+    }
+
+    public interface AnalyzeHashTagDialogListener {
+        void onFinishChoosingSpendingDialog(List<String> hashTagList);
     }
 }

@@ -18,11 +18,11 @@ import java.util.List;
  * Created by kris on 9/20/17. Tokopedia
  */
 
-public class AnalyzeHashTagAutoCompleteAdapter extends ArrayAdapter<String> {
+public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
     private List<String> listOfRecommendedHashTag;
 
-    public AnalyzeHashTagAutoCompleteAdapter(Context context) {
+    public AutoCompleteAdapter(Context context) {
         super(context, 0);
         listOfRecommendedHashTag = new ArrayList<>();
     }

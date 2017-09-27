@@ -36,8 +36,8 @@ public class DebouncingAutoCompleteTextView extends android.support.v7.widget.Ap
         super(context, attrs, defStyleAttr);
     }
 
-    public void setAutoCompleteAttribute(CompositeDisposable compositeDisposable,
-                                         DebouncingAutoCompleteListener listener) {
+    public void initListener(CompositeDisposable compositeDisposable,
+                             DebouncingAutoCompleteListener listener) {
         modifiedCompositeDisposable(compositeDisposable, listener);
         addTextChangedListener(textWatcher());
     }

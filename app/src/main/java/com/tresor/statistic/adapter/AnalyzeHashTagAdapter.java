@@ -92,4 +92,8 @@ public class AnalyzeHashTagAdapter extends RecyclerView.Adapter<AnalyzeHashTagAd
         };
     }
 
+    public void addNewItem(String newlyAddedHashTag) {
+        hashTagList.add(newlyAddedHashTag);
+    }
+
 }

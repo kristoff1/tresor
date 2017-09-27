@@ -24,7 +24,10 @@ import com.tresor.home.fragment.StatisticFragment;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.profile.ProfilePageActivity;
+import com.tresor.statistic.dialog.AnalyzeHashTagSpendingDialog;
 import com.tresor.statistic.dialog.TimePickerDialogFragment;
+
+import java.util.List;
 
 /**
  * Created by kris on 5/27/17. Tokopedia
@@ -32,7 +35,9 @@ import com.tresor.statistic.dialog.TimePickerDialogFragment;
 
 public class HomeActivity extends TresorActivity
         implements NewDataAddedListener,
-        EditPaymentDialog.EditItemListener, TimePickerDialogFragment.DatePickerListener{
+        EditPaymentDialog.EditItemListener,
+        TimePickerDialogFragment.DatePickerListener,
+        AnalyzeHashTagSpendingDialog.AnalyzeHashTagDialogListener{
 
     public static final int STATISTIC_FRAGMENT_POSITION = 2;
     private ViewPager homePager;
@@ -127,6 +132,11 @@ public class HomeActivity extends TresorActivity
                     DateEditor.editMonth(this, month),
                     dayOfMonth);
         }
+    }
+
+    @Override
+    public void onFinishChoosingSpendingDialog(List<String> hashTagList) {
+        statisticFragment.receivedHashTagComparisonData(hashTagList);
     }
 
     /*private View.OnClickListener onBannerClickedListener() {

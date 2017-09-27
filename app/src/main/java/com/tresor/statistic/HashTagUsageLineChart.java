@@ -58,7 +58,6 @@ public class HashTagUsageLineChart extends LinearLayout{
         View view =  inflater.inflate(R.layout.view_multi_line_chart, this, true);
         this.context = context;
         selectHashTagButton = (TextView) view.findViewById(R.id.select_hastag_button);
-        selectHashTagButton.setOnClickListener(onHashTagButtonClickedListener());
         hashTagLineChart = (LineChart) view.findViewById(R.id.hashtag_multi_line_chart);
         hashTagLineChart.setDrawGridBackground(false);
         hashTagLineChart.getAxisLeft().setDrawGridLines(false);
@@ -66,17 +65,23 @@ public class HashTagUsageLineChart extends LinearLayout{
     }
 
     public void setLineChart(Context context, List<HashTagStatisticModel> statisticModels) {
-        LineData lineData = new LineData(multipleHashtagLine(context));
+        List<String> hashtagList = dummyTop5HashTagList();
+        setChartData(context, hashtagList);
+    }
+
+    private void setChartData(Context context, List<String> hashtagList) {
+        selectHashTagButton.setOnClickListener(onHashTagButtonClickedListener(hashtagList));
+        LineData lineData = new LineData(multipleHashtagLine(context, hashtagList));
         lineData.setDrawValues(false);
         hashTagLineChart.setData(lineData);
         hashTagLineChart.animateX(1000);
     }
 
-    private List<ILineDataSet> multipleHashtagLine(Context context) {
+    private List<ILineDataSet> multipleHashtagLine(Context context, List<String> hashTags) {
         List<ILineDataSet> lineDataSets = new ArrayList<>();
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < hashTags.size(); i++) {
             LineDataSet lineDataSet = new LineDataSet(getLineAmountHashTag(),
-                    "HashTag #" + String.valueOf(i + 1));
+                    hashTags.get(i));
             setDatasetMode(lineDataSet, getColor(context, i), false);
             lineDataSets.add(lineDataSet);
         }
@@ -136,7 +141,7 @@ public class HashTagUsageLineChart extends LinearLayout{
         });
     }
 
-    private OnClickListener onHashTagButtonClickedListener() {
+    private OnClickListener onHashTagButtonClickedListener(final List<String> hashtagList) {
         return new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +151,8 @@ public class HashTagUsageLineChart extends LinearLayout{
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-                AnalyzeHashTagSpendingDialog analyzeDialog = AnalyzeHashTagSpendingDialog.createDialog(dummyTop5HashTagList());
+                AnalyzeHashTagSpendingDialog analyzeDialog = AnalyzeHashTagSpendingDialog
+                        .createDialog((ArrayList<String>) hashtagList);
                 analyzeDialog.show(ft, "dialog");
             }
         };
@@ -158,5 +164,9 @@ public class HashTagUsageLineChart extends LinearLayout{
         dummyList.add("#makanterus");
         dummyList.add("#makansampendut");
         return dummyList;
+    }
+
+    public void receivedListOfHashTagComparison(List<String> hashTagsToCompare) {
+        setChartData(context, hashTagsToCompare);
     }
 }

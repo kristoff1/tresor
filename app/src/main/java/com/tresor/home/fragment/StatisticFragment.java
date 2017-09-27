@@ -227,4 +227,8 @@ public class StatisticFragment extends Fragment {
             totalUsageLineChart.setData(getActivity());
         }
     }
+
+    public void receivedHashTagComparisonData(List<String> listHashTagToCompare) {
+        hashTagUsageLineChart.receivedListOfHashTagComparison(listHashTagToCompare);
+    }
 }
