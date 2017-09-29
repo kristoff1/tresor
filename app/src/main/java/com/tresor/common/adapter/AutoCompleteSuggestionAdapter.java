@@ -19,11 +19,11 @@ import java.util.List;
  */
 
 public class AutoCompleteSuggestionAdapter extends ArrayAdapter<String>{
-    private List<String> listOfRecommendedHashTag;
+    private List<String> listOfRecommendation;
 
     public AutoCompleteSuggestionAdapter(Context context) {
         super(context, 0);
-        listOfRecommendedHashTag = new ArrayList<>();
+        listOfRecommendation = new ArrayList<>();
     }
 
     private class AutoCompleteViewHolder {
@@ -32,13 +32,13 @@ public class AutoCompleteSuggestionAdapter extends ArrayAdapter<String>{
 
     @Override
     public int getCount() {
-        return listOfRecommendedHashTag.size();
+        return listOfRecommendation.size();
     }
 
     @Nullable
     @Override
     public String getItem(int position) {
-        return listOfRecommendedHashTag.get(position);
+        return listOfRecommendation.get(position);
     }
 
     @NonNull
@@ -54,11 +54,11 @@ public class AutoCompleteSuggestionAdapter extends ArrayAdapter<String>{
         } else {
             holder = (AutoCompleteSuggestionAdapter.AutoCompleteViewHolder) convertView.getTag();
         }
-        holder.autoComplete.setText(listOfRecommendedHashTag.get(position));
+        holder.autoComplete.setText(listOfRecommendation.get(position));
         return convertView;
     }
 
     public void updateData(List<String> listOfRecommendedHashTag) {
-        this.listOfRecommendedHashTag = listOfRecommendedHashTag;
+        this.listOfRecommendation = listOfRecommendedHashTag;
     }
 }

@@ -14,9 +14,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.tresor.R;
+import com.tresor.common.adapter.AutoCompleteSuggestionAdapter;
 import com.tresor.common.widget.DebouncingAutoCompleteTextView;
 import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
-import com.tresor.statistic.adapter.AutoCompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +77,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         TextView okayButton = (TextView) view.findViewById(R.id.okay_button);
 
         AnalyzeHashTagAdapter analyzeHashTagAdapter = new AnalyzeHashTagAdapter(analyzedHashTagList);
-        AutoCompleteAdapter arrayAdapter = new AutoCompleteAdapter(getActivity());
+        AutoCompleteSuggestionAdapter arrayAdapter = new AutoCompleteSuggestionAdapter(getActivity());
 
         setupAtutoCompleteTextView(listOfHashTag, autoCompleteTextView, arrayAdapter);
         setupHashTagListProperties(hashTagList, analyzeHashTagAdapter);
@@ -93,7 +93,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         hashTagList.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void setupAtutoCompleteTextView(List<String> listOfHashTag, DebouncingAutoCompleteTextView autoCompleteTextView, AutoCompleteAdapter arrayAdapter) {
+    private void setupAtutoCompleteTextView(List<String> listOfHashTag, DebouncingAutoCompleteTextView autoCompleteTextView, AutoCompleteSuggestionAdapter arrayAdapter) {
         autoCompleteTextView.initListener(
                 compositeDisposable,
                 debouncingAutoCompleteListener(arrayAdapter, listOfHashTag)
@@ -104,7 +104,7 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
 
     private DebouncingAutoCompleteTextView
             .DebouncingAutoCompleteListener debouncingAutoCompleteListener(
-            final AutoCompleteAdapter arrayAdapter,
+            final AutoCompleteSuggestionAdapter arrayAdapter,
             final List<String> listOfHashTag) {
         return new DebouncingAutoCompleteTextView.DebouncingAutoCompleteListener() {
             @Override
