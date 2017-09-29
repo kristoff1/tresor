@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorDark</item>
+        <item name="colorPrimaryDark">@color/colorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="editTextStyle">@style/AppEditText</item>-->
         <item name="buttonStyle">@style/AppButton</item>
@@ -90,13 +90,15 @@
     </style>
 
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/subItemSelected</item>
-        <item name="tabBackground">@color/colorMain</item>
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabBackground">@color/colorDark</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabTextAppearance">@style/AppTabTextAppearance</item>
     </style>
 
     <!-- for text -->
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
-
+        <item name="android:textColor">@android:color/white</item>
     </style>
     
 </resources>

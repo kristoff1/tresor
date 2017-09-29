@@ -10,12 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.tresor.R;
 import com.tresor.common.widget.DebouncingAutoCompleteTextView;
-import com.tresor.home.fragment.StatisticFragment;
 import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
 import com.tresor.statistic.adapter.AutoCompleteAdapter;
 
@@ -75,7 +74,6 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         RecyclerView hashTagList = (RecyclerView) view.findViewById(R.id.selected_hash_tag_list);
         DebouncingAutoCompleteTextView autoCompleteTextView = (DebouncingAutoCompleteTextView)
                 view.findViewById(R.id.add_new_hash_tag_auto_complete);
-        ImageView addButton = (ImageView) view.findViewById(R.id.add_new_hash_tag_button);
         TextView okayButton = (TextView) view.findViewById(R.id.okay_button);
 
         AnalyzeHashTagAdapter analyzeHashTagAdapter = new AnalyzeHashTagAdapter(analyzedHashTagList);
@@ -84,8 +82,8 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         setupAtutoCompleteTextView(listOfHashTag, autoCompleteTextView, arrayAdapter);
         setupHashTagListProperties(hashTagList, analyzeHashTagAdapter);
 
-        addButton.setOnClickListener(addButtonListener(
-                analyzeHashTagAdapter, autoCompleteTextView)
+        autoCompleteTextView.setOnItemClickListener(
+                onItemClickListener(analyzeHashTagAdapter, listOfHashTag)
         );
         okayButton.setOnClickListener(onOkayButtonClickedListener(analyzedHashTagList));
     }
@@ -127,14 +125,14 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         };
     }
 
-    private View.OnClickListener addButtonListener(
+    private AdapterView.OnItemClickListener onItemClickListener(
             final AnalyzeHashTagAdapter adapter,
-            final DebouncingAutoCompleteTextView textView
+            final List<String> autoCompleteHashTagList
     ) {
-        return new View.OnClickListener() {
+        return new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                adapter.addNewItem(textView.getText().toString());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                adapter.addNewItem(autoCompleteHashTagList.get(position));
                 adapter.notifyDataSetChanged();
             }
         };
