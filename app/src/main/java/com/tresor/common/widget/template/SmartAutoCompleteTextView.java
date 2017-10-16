@@ -1,9 +1,11 @@
-package com.tresor.common.widget;
+package com.tresor.common.widget.template;
 
 import android.content.Context;
-import android.text.Editable;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
+import android.view.View;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,59 +19,41 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by kris on 9/22/17. Tokopedia
+ * Created by kris on 9/29/17. Tokopedia
  */
 
-public class DebouncingAutoCompleteTextView extends android.support.v7.widget.AppCompatAutoCompleteTextView{
+public abstract class SmartAutoCompleteTextView extends AppCompatAutoCompleteTextView {
 
-    private textChangedListener textListener;
+    protected textChangedListener textListener;
 
-    public DebouncingAutoCompleteTextView(Context context) {
+    public SmartAutoCompleteTextView(Context context) {
         super(context);
     }
 
-    public DebouncingAutoCompleteTextView(Context context, AttributeSet attrs) {
+    public SmartAutoCompleteTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public DebouncingAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SmartAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public void initListener(CompositeDisposable compositeDisposable,
-                             DebouncingAutoCompleteListener listener) {
+    protected void initAttribute(CompositeDisposable compositeDisposable,
+                                 AutoCompleteListener listener) {
         modifiedCompositeDisposable(compositeDisposable, listener);
-        addTextChangedListener(textWatcher());
+        addTextChangedListener(getTextWatcher());
+        setOnKeyListener(onKeyListener(listener));
     }
 
-    private TextWatcher textWatcher() {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(textListener != null) {
-                    textListener.onQueryTextChanged(s.toString());
-                }
-            }
-        };
-    }
+    protected abstract TextWatcher getTextWatcher();
 
     private CompositeDisposable modifiedCompositeDisposable(
             CompositeDisposable compositeDisposable,
-            DebouncingAutoCompleteListener listener) {
+            AutoCompleteListener autoCompleteListener) {
         compositeDisposable.add(Observable.create(onSubscribeDebounce())
                 .debounce(500, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(debounceDisposableObserver(listener)));
+                .subscribeWith(debounceDisposableObserver(autoCompleteListener)));
         return compositeDisposable;
     }
 
@@ -87,12 +71,13 @@ public class DebouncingAutoCompleteTextView extends android.support.v7.widget.Ap
         };
     }
 
-    private DisposableObserver<String> debounceDisposableObserver(final DebouncingAutoCompleteListener
+    private DisposableObserver<String> debounceDisposableObserver(final AutoCompleteListener
                                                                           listener) {
         return new DisposableObserver<String>() {
             @Override
             public void onNext(@NonNull String s) {
-                listener.finishedTyping(s);
+                if(s.isEmpty()) listener.onEditTextEmptied();
+                else listener.finishedTyping(s);
             }
 
             @Override
@@ -107,14 +92,38 @@ public class DebouncingAutoCompleteTextView extends android.support.v7.widget.Ap
         };
     }
 
-    private interface textChangedListener {
+    private OnKeyListener onKeyListener(final AutoCompleteListener
+                                                listener) {
+        return new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            listener.onEnterKeyPressed();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+
+    protected interface textChangedListener {
         void onQueryTextChanged(String query);
     }
 
-    public interface DebouncingAutoCompleteListener {
+
+    public interface AutoCompleteListener {
         void finishedTyping(String query);
 
         void onTypingError(Throwable e);
+
+        void onEditTextEmptied();
+
+        void onEnterKeyPressed();
     }
 
 }

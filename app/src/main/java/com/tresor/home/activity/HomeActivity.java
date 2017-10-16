@@ -1,18 +1,12 @@
 package com.tresor.home.activity;
 
-import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.tresor.R;
 import com.tresor.common.TresorActivity;
@@ -21,9 +15,9 @@ import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.fragment.SearchFragment;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
 import com.tresor.home.fragment.StatisticFragment;
+import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
-import com.tresor.profile.ProfilePageActivity;
 import com.tresor.statistic.dialog.AnalyzeHashTagSpendingDialog;
 import com.tresor.statistic.dialog.TimePickerDialogFragment;
 
@@ -34,17 +28,14 @@ import java.util.List;
  */
 
 public class HomeActivity extends TresorActivity
-        implements NewDataAddedListener,
+        implements HomeActivityListener, NewDataAddedListener,
         EditPaymentDialog.EditItemListener,
         TimePickerDialogFragment.DatePickerListener,
         AnalyzeHashTagSpendingDialog.AnalyzeHashTagDialogListener{
 
-    public static final int STATISTIC_FRAGMENT_POSITION = 2;
     private ViewPager homePager;
 
     private TabLayout homeTab;
-
-    //private LinearLayout bannerBudget;
 
     private StatisticFragment statisticFragment;
 

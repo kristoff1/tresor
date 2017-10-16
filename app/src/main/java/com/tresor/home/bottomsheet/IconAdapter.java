@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.tresor.R;
 import com.tresor.home.inteface.IconSelectetionListener;
+import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.IconModel;
 
 import java.util.ArrayList;
@@ -24,9 +25,16 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.ImageHolder>{
 
     private IconSelectetionListener listener;
 
+    private FinancialHistoryModel model;
+
     public IconAdapter(List<IconModel> iconModelList, IconSelectetionListener listener) {
         this.iconModelList = iconModelList;
         this.listener = listener;
+    }
+
+    public IconAdapter(List<IconModel> iconModelList, FinancialHistoryModel model) {
+        this.iconModelList = iconModelList;
+        this.model = model;
     }
 
     @Override
@@ -44,10 +52,18 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.ImageHolder>{
             @Override
             public void onClick(View v) {
                 //TODO change background of selected item
-                listener.onIconClicked(holder.getAdapterPosition(),
-                        iconModelList.get(holder.getAdapterPosition()).getIconImageId());
+                refreshIcons(holder.getAdapterPosition());
+                notifyDataSetChanged();
             }
         });
+    }
+
+    private void refreshIcons(int position) {
+        for (int i = 0; i < iconModelList.size(); i++) {
+            iconModelList.get(i).setChoosen(false);
+        }
+        iconModelList.get(position).setChoosen(true);
+        model.setTheme(iconModelList.get(position).getIconImageId());
     }
 
     private void switchIconBackgroundColor(ImageHolder holder, int position) {

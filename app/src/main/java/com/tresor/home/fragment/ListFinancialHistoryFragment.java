@@ -2,9 +2,9 @@ package com.tresor.home.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,34 +12,40 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.tresor.R;
-import com.tresor.common.HashTagSuggestionAdapter;
-import com.tresor.common.model.HashTagFilterModel;
+import com.tresor.common.activity.addpayment.PaymentTemplateInterface;
+import com.tresor.common.adapter.AutoCompleteSuggestionAdapter;
+import com.tresor.common.adapter.FilterAdapter;
+import com.tresor.common.widget.implementable.FilterAutoCompleteTextView;
+import com.tresor.common.widget.template.SmartAutoCompleteTextView;
+import com.tresor.home.activity.AddPaymentActivity;
+import com.tresor.home.activity.EditPaymentActivity;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
-import com.tresor.home.dialog.AddPaymentDialog;
 import com.tresor.home.dialog.EditPaymentDialog;
-import com.tresor.home.inteface.NewDataAddedListener;
+import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.SpendingDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+
+import static com.tresor.home.inteface.HomeActivityListener.ADD_NEW_PAYMENT_REQUEST_CODE;
+import static com.tresor.home.inteface.HomeActivityListener.EXTRA_ADD_DATA_RESULT;
+
 /**
  * Created by kris on 5/27/17. Tokopedia
  */
 
 public class ListFinancialHistoryFragment extends Fragment
-        implements HashTagSuggestionAdapter.onSuggestedHashTagClickedListener,
-        FinancialHistoryAdapter.ListItemListener {
+        implements FinancialHistoryAdapter.ListItemListener, FilterAdapter.onFilterItemClicked {
 
     private RecyclerView financialHistoryList;
     private FinancialHistoryAdapter financialHistoryListAdapter;
-    private RecyclerView suggestedHashTagRecyclerView;
-    private RecyclerView.Adapter suggestedHashTagAdapter;
     private List<FinancialHistoryModel> financialList;
-    private BottomSheetDialog bottomSheetDialog;
 
     public static ListFinancialHistoryFragment createFragment() {
         return new ListFinancialHistoryFragment();
@@ -50,6 +56,26 @@ public class ListFinancialHistoryFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_list_financial_history, container, false);
         financialHistoryList = (RecyclerView) mainView.findViewById(R.id.list_financial_history);
+
+        RecyclerView filterRecyclerView = (RecyclerView) mainView
+                .findViewById(R.id.filter_recycler_view);
+        FilterAdapter filterAdapter = new FilterAdapter(this);
+        filterRecyclerView.setAdapter(filterAdapter);
+        filterRecyclerView.setLayoutManager(
+                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
+        );
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        FilterAutoCompleteTextView autoCompleteField = (FilterAutoCompleteTextView) mainView
+                .findViewById(R.id.auto_complete_filter);
+        AutoCompleteSuggestionAdapter arrayAdapter = new AutoCompleteSuggestionAdapter
+                (getActivity());
+        autoCompleteField.setAdapter(arrayAdapter);
+        List<String> hashTagSuggestions = new ArrayList<>();
+        autoCompleteField.initComponent(compositeDisposable, autoCompleteListener(arrayAdapter,
+                hashTagSuggestions, autoCompleteField));
+        autoCompleteField.setOnItemClickListener(onItemClickListener(hashTagSuggestions,
+                filterAdapter, autoCompleteField));
         financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
         financialHistoryList.setHasFixedSize(true);
         financialList = financialHistoryModelList();
@@ -58,14 +84,6 @@ public class ListFinancialHistoryFragment extends Fragment
                 this);
         financialHistoryList.setAdapter(financialHistoryListAdapter);
         financialHistoryList.setNestedScrollingEnabled(false);
-
-        suggestedHashTagRecyclerView = (RecyclerView) mainView
-                .findViewById(R.id.suggested_hash_tag_recycler_view);
-        suggestedHashTagRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.HORIZONTAL));
-        suggestedHashTagAdapter = new HashTagSuggestionAdapter(dummyHashtagListModel(), this);
-        suggestedHashTagRecyclerView.setAdapter(suggestedHashTagAdapter);
-        suggestedHashTagRecyclerView.setNestedScrollingEnabled(false);
         FloatingActionButton historicalFloatingActionButton = (FloatingActionButton)
                 mainView.findViewById(R.id.history_floating_action_button);
         historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -78,26 +96,29 @@ public class ListFinancialHistoryFragment extends Fragment
     }
 
     public void onHomeButtonFabClicked() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        AddPaymentDialog addPaymentDialog = new AddPaymentDialog();
-        addPaymentDialog.show(ft, "dialog");
-        /*bottomSheetDialog = new AddPaymentBottomSheet(getActivity(), this);
-        bottomSheetDialog.show();*/
+        Intent intent = new Intent(getActivity(), AddPaymentActivity.class);
+        startActivityForResult(intent, ADD_NEW_PAYMENT_REQUEST_CODE);
     }
 
-    private List<FinancialHistoryModel> selectedFilter(String selectedHash) {
+
+
+    private List<FinancialHistoryModel> selectedFilterResult(List<String> filteredTagList) {
         List<FinancialHistoryModel> filteredList = new ArrayList<>();
         for (int i = 0; i<financialList.size(); i++) {
-            if(financialList.get(i).getHashTagString().contains(selectedHash)) {
+            if(selectFilter(financialList.get(i).getHashTagString(), filteredTagList)) {
                 filteredList.add(financialList.get(i));
             }
         }
         return filteredList;
+    }
+
+    private boolean selectFilter(String hashTagString, List<String> listOfFilters) {
+        for (int i = 0; i < listOfFilters.size(); i++) {
+            if(!hashTagString.toLowerCase().contains(listOfFilters.get(i).toLowerCase())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private SpendingDataModel spendingDataModel() {
@@ -137,71 +158,110 @@ public class ListFinancialHistoryFragment extends Fragment
         return list;
     }
 
-    private List<HashTagFilterModel> dummyHashtagListModel() {
-        List<HashTagFilterModel> hashTagFilterModels = new ArrayList<>();
-        for(int i = 0; i < dummySuggestedHashTagList().size(); i++) {
-            HashTagFilterModel model = new HashTagFilterModel();
-            model.setHashTagString(dummySuggestedHashTagList().get(i));
-            model.setSelected(false);
-            hashTagFilterModels.add(model);
-        }
-        return hashTagFilterModels;
-    }
-
-    private List<String> dummySuggestedHashTagList() {
-        List<String> dummyHashTag = new ArrayList<>();
-        dummyHashTag.add("#Makan");
-        dummyHashTag.add("#Siang");
-        dummyHashTag.add("#Alalalalala");
-        dummyHashTag.add("#Ajebajeb");
-        dummyHashTag.add("#ClubbingNyeeeet");
-        dummyHashTag.add("#LalalaFest");
-        return dummyHashTag;
-    }
-
     public void onDataAdded(FinancialHistoryModel newData) {
         financialList.add(0, newData);
-        financialHistoryListAdapter
+        /*financialHistoryListAdapter
                 .notifyItemInserted(FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER);
         financialHistoryListAdapter
                 .notifyItemRangeInserted(
                         FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER,
                         financialList.size() + FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER
                 );
-        financialHistoryList.scrollToPosition(FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER);
+        financialHistoryList.scrollToPosition(FinancialHistoryAdapter.NUMBER_OF_HEADER_ADAPTER);*/
 
         //TODO RELEASE IF ANIMATION CAUSES MUCH BUGS
-        //financialHistoryListAdapter.notifyDataSetChanged();
+        financialHistoryListAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void hashTagSelected(String selectedHashtag) {
-        financialHistoryListAdapter.updateData(selectedFilter(selectedHashtag));
-        financialHistoryListAdapter.notifyDataSetChanged();
-        suggestedHashTagAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public void clearFilter() {
-        financialHistoryListAdapter.updateData(financialList);
-        financialHistoryListAdapter.notifyDataSetChanged();
-        suggestedHashTagAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onClick(FinancialHistoryModel itemModel) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("edit_dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        EditPaymentDialog editPaymentDialog = EditPaymentDialog
-                .createEditPaymentDialog(itemModel);
-        editPaymentDialog.show(ft, "edit_dialog");
+        Intent intent = new Intent(getActivity(), EditPaymentActivity.class);
+        intent.putExtra(PaymentTemplateInterface.EXTRAS_OPEN_EDIT_PAYMENT_PAGE, itemModel);
+        startActivityForResult(intent, HomeActivityListener.EDIT_PAYMENT_REQUEST_CODE);
     }
 
     public void onItemEdited() {
         financialHistoryListAdapter.notifyDataSetChanged();
+    }
+
+    private SmartAutoCompleteTextView
+            .AutoCompleteListener autoCompleteListener(
+                    final AutoCompleteSuggestionAdapter arrayAdapter,
+                    final List<String> listOfHashTag,
+                    final FilterAutoCompleteTextView autoCompleteTextView) {
+
+        return new SmartAutoCompleteTextView.AutoCompleteListener() {
+            @Override
+            public void finishedTyping(String query) {
+                listOfHashTag.clear();
+                listOfHashTag.add("makan");
+                listOfHashTag.add("siang");
+                listOfHashTag.add("liburan");
+                listOfHashTag.add("pup");
+                arrayAdapter.updateData(listOfHashTag);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onTypingError(Throwable e) {
+
+            }
+
+            @Override
+            public void onEditTextEmptied() {
+                /*financialHistoryListAdapter.updateData(financialList);
+                financialHistoryListAdapter.notifyDataSetChanged();*/
+            }
+
+            @Override
+            public void onEnterKeyPressed() {
+                updateAdapter(autoCompleteTextView);
+            }
+        };
+    }
+
+    private AdapterView.OnItemClickListener onItemClickListener(
+            final List<String> autoCompleteHashTagList,
+            final FilterAdapter filterAdapter,
+            final FilterAutoCompleteTextView autoCompleteTextView
+    ) {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                filterAdapter.addNewHashTag(autoCompleteHashTagList.get(position));
+                financialHistoryListAdapter
+                        .updateData(selectedFilterResult(filterAdapter.getHashTagShownInAdapter()));
+                financialHistoryListAdapter.notifyDataSetChanged();
+                autoCompleteTextView.setText("");
+                autoCompleteTextView.requestFocus();
+                /*autoCompleteTextView.addNewString(autoCompleteHashTagList.get(position));
+                updateAdapter(autoCompleteTextView);
+                autoCompleteTextView.setSelection(autoCompleteTextView.getText().length());*/
+            }
+        };
+    }
+
+    private void updateAdapter(FilterAutoCompleteTextView autoCompleteTextView) {
+        financialHistoryListAdapter
+                .updateData(selectedFilterResult(autoCompleteTextView.getSeparatedString()));
+        financialHistoryListAdapter.notifyDataSetChanged();
+        autoCompleteTextView.requestFocus();
+    }
+
+    @Override
+    public void onFilterItemRemoved(List<String> hashTagList) {
+        if (hashTagList.size() == 0)  financialHistoryListAdapter.updateData(financialList);
+        else financialHistoryListAdapter.updateData(selectedFilterResult(hashTagList));
+        financialHistoryListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ADD_NEW_PAYMENT_REQUEST_CODE) {
+            onDataAdded((FinancialHistoryModel) data.getParcelableExtra(EXTRA_ADD_DATA_RESULT));
+        }
     }
 }

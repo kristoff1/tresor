@@ -36,7 +36,7 @@ public class FinancialHistoryModel implements Parcelable{
 
     protected FinancialHistoryModel(Parcel in) {
         amount = in.readString();
-        amountUnformatted = in.readInt();
+        amountUnformatted = in.readDouble();
         usesComma = in.readByte() != 0;
         currencyId = in.readInt();
         hashtag = in.createStringArrayList();

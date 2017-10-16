@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import com.tresor.R;
 import com.tresor.common.adapter.AutoCompleteSuggestionAdapter;
-import com.tresor.common.widget.DebouncingAutoCompleteTextView;
+import com.tresor.common.widget.implementable.DebouncingAutoCompleteTextView;
+import com.tresor.common.widget.template.SmartAutoCompleteTextView;
 import com.tresor.statistic.adapter.AnalyzeHashTagAdapter;
 
 import java.util.ArrayList;
@@ -102,14 +103,12 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
         autoCompleteTextView.setAdapter(arrayAdapter);
     }
 
-    private DebouncingAutoCompleteTextView
-            .DebouncingAutoCompleteListener debouncingAutoCompleteListener(
+    private SmartAutoCompleteTextView.AutoCompleteListener debouncingAutoCompleteListener(
             final AutoCompleteSuggestionAdapter arrayAdapter,
             final List<String> listOfHashTag) {
-        return new DebouncingAutoCompleteTextView.DebouncingAutoCompleteListener() {
+        return new SmartAutoCompleteTextView.AutoCompleteListener() {
             @Override
             public void finishedTyping(String query) {
-                //TODO Connect to Network Here
                 listOfHashTag.clear();
                 listOfHashTag.add("#makan" + query);
                 listOfHashTag.add("#gemuk" + query);
@@ -120,6 +119,16 @@ public class AnalyzeHashTagSpendingDialog extends DialogFragment {
 
             @Override
             public void onTypingError(Throwable e) {
+
+            }
+
+            @Override
+            public void onEditTextEmptied() {
+
+            }
+
+            @Override
+            public void onEnterKeyPressed() {
 
             }
         };

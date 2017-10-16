@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".profile.ProfilePageActivity"/>
         <activity android:name=".statistic.activity.HighlightedDetailActivity"/>
+        <activity android:name=".home.activity.AddPaymentActivity"/>
+        <activity android:name=".home.activity.EditPaymentActivity"/>
     </application>
 
 </manifest>

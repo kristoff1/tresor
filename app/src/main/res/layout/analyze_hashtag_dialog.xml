@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <com.tresor.common.widget.DebouncingAutoCompleteTextView
+        <com.tresor.common.widget.implementable.DebouncingAutoCompleteTextView
             android:id="@+id/add_new_hash_tag_auto_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

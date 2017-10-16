@@ -69,24 +69,8 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (holder.getItemViewType()) {
             case HEADER_ADAPTER:
                 FinancialHistoryHeaderHolder headerHolder = (FinancialHistoryHeaderHolder) holder;
-                SpendingDataModel spendingData = spendingDataModel;
                 headerHolder.totalExpense.setText(totalAllocatedMoney());
                 //TODO SIMPLIFY!!!!
-                if(spendingData.isHistory()) {
-                    headerHolder.allocatedSpendingLayout.setVisibility(View.GONE);
-                    headerHolder.saveMoneyLayout.setVisibility(View.GONE);
-                } else if(spendingData.getDailyAllocation() == 0
-                        && spendingData.getTodayAllocation() == 0) {
-                    headerHolder.allocatedSpendingLayout.setVisibility(View.GONE);
-                    headerHolder.saveMoneyLayout.setVisibility(View.GONE);
-                } else {
-                    headerHolder.allocatedSpendingLayout.setVisibility(View.VISIBLE);
-                    headerHolder.saveMoneyLayout.setVisibility(View.VISIBLE);
-                    if(spendingData.getTodayAllocation() == 0)
-                        headerHolder.totalAllocated.setText(spendingData.getDailyAllocationString());
-                    else headerHolder.totalAllocated.setText(spendingData.getTodayAllocationString());
-                    headerHolder.totalSaved.setText(spendingData.getTodaySavingString());
-                }
                 break;
             case ITEM_ADAPTER:
                 FinancialHistoryViewHolder itemHolder = (FinancialHistoryViewHolder) holder;
@@ -137,19 +121,12 @@ public class FinancialHistoryAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private class FinancialHistoryHeaderHolder extends RecyclerView.ViewHolder {
-        private LinearLayout allocatedSpendingLayout;
-        private LinearLayout saveMoneyLayout;
-        private TextView totalAllocated;
         private TextView totalExpense;
-        private TextView totalSaved;
+
 
         FinancialHistoryHeaderHolder(View itemView) {
             super(itemView);
-            allocatedSpendingLayout = (LinearLayout) itemView.findViewById(R.id.allocated_spending_layout);
-            saveMoneyLayout = (LinearLayout) itemView.findViewById(R.id.save_money_layout);
-            totalAllocated = (TextView) itemView.findViewById(R.id.total_allocated);
             totalExpense = (TextView) itemView.findViewById(R.id.total_expense);
-            totalSaved = (TextView) itemView.findViewById(R.id.total_saved);
         }
     }
 
