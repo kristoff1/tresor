@@ -1,89 +1,110 @@
 package com.tresor.home.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.AdapterView;
+import android.widget.EditText;
 
-import com.aigestudio.wheelpicker.WheelPicker;
-import com.aigestudio.wheelpicker.widgets.WheelDatePicker;
-import com.aigestudio.wheelpicker.widgets.WheelDayPicker;
-import com.aigestudio.wheelpicker.widgets.WheelMonthPicker;
-import com.aigestudio.wheelpicker.widgets.WheelYearPicker;
 import com.tresor.R;
-import com.tresor.common.HashTagSuggestionAdapter;
-import com.tresor.common.model.HashTagFilterModel;
+import com.tresor.common.adapter.AutoCompleteSuggestionAdapter;
+import com.tresor.common.adapter.FilterAdapter;
+import com.tresor.common.fragment.DateRangeFragment;
+import com.tresor.common.widget.implementable.FilterAutoCompleteTextView;
+import com.tresor.common.widget.template.SmartAutoCompleteTextView;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.SpendingDataModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 /**
- * Created by kris on 6/23/17. Tokopedia
+ * Created by kris on 10/18/17. Tokopedia
  */
 
-public class SearchFragment extends Fragment
-        implements HashTagSuggestionAdapter.onSuggestedHashTagClickedListener,
-        FinancialHistoryAdapter.ListItemListener {
+public class SearchFragment extends DateRangeFragment
+        implements FinancialHistoryAdapter.ListItemListener, FilterAdapter.onFilterItemClicked{
 
-    private RecyclerView searchList;
-    private FinancialHistoryAdapter searchListAdapter;
-
-    private WheelDayPicker wheelDayPicker;
-    private WheelPicker wheelMonthPicker;
-    private WheelYearPicker wheelYearPicker;
-    private List<String> monthList;
-
+    private FinancialHistoryAdapter financialHistoryAdapter;
     private List<FinancialHistoryModel> financialList;
 
-    private RecyclerView suggestedHashTagRecyclerView;
-    private RecyclerView.Adapter suggestedHashTagAdapter;
+    public static SearchFragment createInstance() {
+        return new SearchFragment();
+    }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View mainView = inflater.inflate(R.layout.fragment_home_search, container, false);
-        monthList = new ArrayList<>(Arrays.asList((getResources().getStringArray(R.array.months))));
-        wheelDayPicker = (WheelDayPicker) mainView.findViewById(R.id.day_picker);
-        wheelMonthPicker = (WheelPicker) mainView.findViewById(R.id.month_picker);
-        wheelYearPicker = (WheelYearPicker) mainView.findViewById(R.id.year_picker);
-        wheelMonthPicker.setData(monthList);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
+    @Override
+    protected void initMainView(View mainView) {
+        FilterAutoCompleteTextView filterField = (FilterAutoCompleteTextView) mainView
+                .findViewById(R.id.auto_complete_search_filter);
+        RecyclerView recyclerView = (RecyclerView) mainView
+                .findViewById(R.id.search_recycler_view);
+        RecyclerView filterRecyclerView = (RecyclerView) mainView
+                .findViewById(R.id.filter_recycler_view);
+        FilterAdapter filterAdapter = new FilterAdapter(this);
+        filterRecyclerView.setAdapter(filterAdapter);
+        AutoCompleteSuggestionAdapter arrayAdapter = new AutoCompleteSuggestionAdapter
+                (getActivity());
+        filterField.setAdapter(arrayAdapter);
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        List<String> hashTagSuggestions = new ArrayList<>();
+        filterField.initComponent(compositeDisposable, autoCompleteListener(arrayAdapter,
+                hashTagSuggestions, filterField));
+        filterField.setOnItemClickListener(onItemClickListener(hashTagSuggestions,
+                filterAdapter, filterField));
         financialList = financialHistoryModelList();
+        financialHistoryAdapter = new FinancialHistoryAdapter(
+                getActivity(),
+                spendingDataModel(),
+                this);
+        recyclerView.setAdapter(financialHistoryAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
 
-        searchList = (RecyclerView) mainView.findViewById(R.id.filtered_list);
-        searchList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        searchListAdapter = new FinancialHistoryAdapter(getActivity(), spendingDataModel(), this);
-        searchList.setAdapter(searchListAdapter);
-        searchList.setNestedScrollingEnabled(false);
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_search_hashtag;
+    }
 
-        suggestedHashTagRecyclerView = (RecyclerView) mainView
-                .findViewById(R.id.search_hash_tag_recycler_view);
-        suggestedHashTagRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.HORIZONTAL));
-        suggestedHashTagAdapter = new HashTagSuggestionAdapter(dummyHashtagListModel(), this);
-        suggestedHashTagRecyclerView.setAdapter(suggestedHashTagAdapter);
-        suggestedHashTagRecyclerView.setNestedScrollingEnabled(false);
+    @Override
+    protected EditText startDateEditText(View view) {
+        return (EditText) view.findViewById(R.id.start_date_field);
+    }
 
-        return mainView;
+    @Override
+    protected EditText endDateEditText(View view) {
+        return (EditText) view.findViewById(R.id.end_date_field);
+    }
+
+    @Override
+    protected void startDateChanged(int date, int month, int year) {
+
+    }
+
+    @Override
+    protected void endDateChanged(int date, int month, int year) {
+
     }
 
     private SpendingDataModel spendingDataModel() {
         SpendingDataModel model = new SpendingDataModel();
         model.setDailyAllocation(0);
         model.setDailyAllocationString("Rp 0");
-        model.setFinancialHistoryModelList(financialList);
-        model.setHistory(true);
+        model.setFinancialHistoryModelList(financialHistoryModelList());
+        model.setHistory(false);
         model.setTodayAllocation(0);
         model.setTodayAllocationString("Rp 0");
         model.setTodaySaving(0);
@@ -95,7 +116,7 @@ public class SearchFragment extends Fragment
 
     private List<FinancialHistoryModel> financialHistoryModelList() {
         List<FinancialHistoryModel> list = new ArrayList<>();
-        for(int i = 0; i<4; i++) {
+        for(int i = 0; i<8; i++) {
             FinancialHistoryModel financialHistoryModel = new FinancialHistoryModel();
             financialHistoryModel.setAmountUnformatted(50000);
             financialHistoryModel.setAmount("Rp 50.000");
@@ -115,54 +136,93 @@ public class SearchFragment extends Fragment
         return list;
     }
 
-    private List<HashTagFilterModel> dummyHashtagListModel() {
-        List<HashTagFilterModel> hashTagFilterModels = new ArrayList<>();
-        for(int i = 0; i < dummySuggestedHashTagList().size(); i++) {
-            HashTagFilterModel model = new HashTagFilterModel();
-            model.setHashTagString(dummySuggestedHashTagList().get(i));
-            model.setSelected(false);
-            hashTagFilterModels.add(model);
-        }
-        return hashTagFilterModels;
+    @Override
+    public void onClick(FinancialHistoryModel itemModel) {
+
     }
 
-    private List<String> dummySuggestedHashTagList() {
-        List<String> dummyHashTag = new ArrayList<>();
-        dummyHashTag.add("#Makan");
-        dummyHashTag.add("#Siang");
-        dummyHashTag.add("#Alalalalala");
-        dummyHashTag.add("#Ajebajeb");
-        dummyHashTag.add("#ClubbingNyeeeet");
-        dummyHashTag.add("#LalalaFest");
-        return dummyHashTag;
+    private SmartAutoCompleteTextView
+            .AutoCompleteListener autoCompleteListener(
+            final AutoCompleteSuggestionAdapter arrayAdapter,
+            final List<String> listOfHashTag,
+            final FilterAutoCompleteTextView autoCompleteTextView) {
+
+        return new SmartAutoCompleteTextView.AutoCompleteListener() {
+            @Override
+            public void finishedTyping(String query) {
+                listOfHashTag.clear();
+                listOfHashTag.add("makan");
+                listOfHashTag.add("siang");
+                listOfHashTag.add("liburan");
+                listOfHashTag.add("pup");
+                arrayAdapter.updateData(listOfHashTag);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onTypingError(Throwable e) {
+
+            }
+
+            @Override
+            public void onEditTextEmptied() {
+                /*financialHistoryListAdapter.updateData(financialList);
+                financialHistoryListAdapter.notifyDataSetChanged();*/
+            }
+
+            @Override
+            public void onEnterKeyPressed() {
+                updateAdapter(autoCompleteTextView);
+            }
+        };
     }
 
-    private List<FinancialHistoryModel> selectedFilter(String selectedHash) {
+    private AdapterView.OnItemClickListener onItemClickListener(
+            final List<String> autoCompleteHashTagList,
+            final FilterAdapter filterAdapter,
+            final FilterAutoCompleteTextView autoCompleteTextView
+    ) {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                filterAdapter.addNewHashTag(autoCompleteHashTagList.get(position));
+                financialHistoryAdapter
+                        .updateData(selectedFilterResult(filterAdapter.getHashTagShownInAdapter()));
+                financialHistoryAdapter.notifyDataSetChanged();
+                autoCompleteTextView.setText("");
+                autoCompleteTextView.requestFocus();
+            }
+        };
+    }
+
+    @Override
+    public void onFilterItemRemoved(List<String> hashTagList) {
+
+    }
+
+    private List<FinancialHistoryModel> selectedFilterResult(List<String> filteredTagList) {
         List<FinancialHistoryModel> filteredList = new ArrayList<>();
         for (int i = 0; i<financialList.size(); i++) {
-            if(financialList.get(i).getHashTagString().contains(selectedHash)) {
+            if(selectFilter(financialList.get(i).getHashTagString(), filteredTagList)) {
                 filteredList.add(financialList.get(i));
             }
         }
         return filteredList;
     }
 
-    @Override
-    public void hashTagSelected(String selectedHashtag) {
-        searchListAdapter.updateData(selectedFilter(selectedHashtag));
-        searchListAdapter.notifyDataSetChanged();
-        suggestedHashTagAdapter.notifyDataSetChanged();
+    private void updateAdapter(FilterAutoCompleteTextView autoCompleteTextView) {
+        financialHistoryAdapter
+                .updateData(selectedFilterResult(autoCompleteTextView.getSeparatedString()));
+        financialHistoryAdapter.notifyDataSetChanged();
+        autoCompleteTextView.requestFocus();
     }
 
-    @Override
-    public void clearFilter() {
-        searchListAdapter.updateData(financialList);
-        searchListAdapter.notifyDataSetChanged();
-        suggestedHashTagAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onClick(FinancialHistoryModel itemModel) {
-
+    private boolean selectFilter(String hashTagString, List<String> listOfFilters) {
+        for (int i = 0; i < listOfFilters.size(); i++) {
+            if(!hashTagString.toLowerCase().contains(listOfFilters.get(i).toLowerCase())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

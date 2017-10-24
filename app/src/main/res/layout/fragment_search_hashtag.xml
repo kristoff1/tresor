@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_small">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/start_date_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:hint="Start Date"
+            android:inputType="none"
+            android:minWidth="120dp"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/text_title" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="To"
+            android:textSize="@dimen/text_title" />
+
+        <EditText
+            android:id="@+id/end_date_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:hint="End Date"
+            android:inputType="none"
+            android:minWidth="120dp"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/text_title" />
+
+    </LinearLayout>
+
+    <com.tresor.common.widget.implementable.FilterAutoCompleteTextView
+        android:id="@+id/auto_complete_search_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:hint="Search Tag" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/filter_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

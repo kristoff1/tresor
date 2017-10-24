@@ -53,6 +53,10 @@ public class StatisticFragment extends Fragment {
 
     private EditText endDateField;
 
+    public static StatisticFragment createStatisticFragment() {
+        return new StatisticFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

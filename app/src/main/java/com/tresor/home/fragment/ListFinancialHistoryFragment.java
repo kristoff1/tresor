@@ -1,7 +1,6 @@
 package com.tresor.home.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +22,6 @@ import com.tresor.common.widget.template.SmartAutoCompleteTextView;
 import com.tresor.home.activity.AddPaymentActivity;
 import com.tresor.home.activity.EditPaymentActivity;
 import com.tresor.home.adapter.FinancialHistoryAdapter;
-import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.SpendingDataModel;
@@ -43,7 +41,6 @@ import static com.tresor.home.inteface.HomeActivityListener.EXTRA_ADD_DATA_RESUL
 public class ListFinancialHistoryFragment extends Fragment
         implements FinancialHistoryAdapter.ListItemListener, FilterAdapter.onFilterItemClicked {
 
-    private RecyclerView financialHistoryList;
     private FinancialHistoryAdapter financialHistoryListAdapter;
     private List<FinancialHistoryModel> financialList;
 
@@ -55,7 +52,8 @@ public class ListFinancialHistoryFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_list_financial_history, container, false);
-        financialHistoryList = (RecyclerView) mainView.findViewById(R.id.list_financial_history);
+        RecyclerView financialHistoryList = (RecyclerView) mainView
+                .findViewById(R.id.list_financial_history);
 
         RecyclerView filterRecyclerView = (RecyclerView) mainView
                 .findViewById(R.id.filter_recycler_view);

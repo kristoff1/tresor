@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.tresor.R;
-import com.tresor.common.TresorActivity;
+import com.tresor.common.activity.TresorPlainActivity;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
 
 
@@ -12,7 +12,7 @@ import com.tresor.home.fragment.ListFinancialHistoryFragment;
  * Created by kris on 9/5/17. Tokopedia
  */
 
-public class HighlightedDetailActivity extends TresorActivity {
+public class HighlightedDetailActivity extends TresorPlainActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
