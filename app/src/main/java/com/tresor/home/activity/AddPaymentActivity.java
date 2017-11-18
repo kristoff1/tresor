@@ -1,7 +1,8 @@
 package com.tresor.home.activity;
 
+import android.app.Activity;
+
 import com.tresor.common.activity.addpayment.PaymentTemplate;
-import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.model.FinancialHistoryModel;
 
 /**
@@ -21,6 +22,6 @@ public class AddPaymentActivity extends PaymentTemplate {
 
     @Override
     protected int getMode() {
-        return HomeActivityListener.ADD_NEW_PAYMENT_REQUEST_CODE;
+        return Activity.RESULT_OK;
     }
 }

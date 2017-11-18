@@ -8,7 +8,7 @@ import com.tresor.common.TresorActivity;
 import com.tresor.common.utils.DateEditor;
 import com.tresor.home.dialog.EditPaymentDialog;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
-import com.tresor.home.fragment.StatisticFragment;
+import com.tresor.home.fragment.ChartFragment;
 import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.inteface.NewDataAddedListener;
 import com.tresor.home.model.FinancialHistoryModel;
@@ -27,7 +27,7 @@ public class HomeActivity extends TresorActivity
         TimePickerDialogFragment.DatePickerListener,
         AnalyzeHashTagSpendingDialog.AnalyzeHashTagDialogListener{
 
-    private StatisticFragment statisticFragment;
+    private ChartFragment chartFragment;
 
     private ListFinancialHistoryFragment listFinancialHistoryFragment;
 
@@ -55,7 +55,7 @@ public class HomeActivity extends TresorActivity
         if(mode == TimePickerDialogFragment.START_DATE_MODE
                 || mode == TimePickerDialogFragment.END_DATE_MODE) {
 
-            statisticFragment.onDateSelected(mode,
+            chartFragment.onDateSelected(mode,
                     year,
                     DateEditor.editMonth(this, month),
                     dayOfMonth);
@@ -65,7 +65,7 @@ public class HomeActivity extends TresorActivity
     @Override
     public void onFinishChoosingSpendingDialog(List<String> hashTagList) {
         setSelectedMenu(R.id.search_menu);
-        statisticFragment.receivedHashTagComparisonData(hashTagList);
+        chartFragment.receivedHashTagComparisonData(hashTagList);
     }
 
 }

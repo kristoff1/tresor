@@ -11,9 +11,8 @@ import android.view.MenuItem;
 
 import com.tresor.R;
 import com.tresor.home.fragment.ListFinancialHistoryFragment;
-import com.tresor.home.fragment.HistoryFragment;
 import com.tresor.home.fragment.SearchFragment;
-import com.tresor.home.fragment.StatisticFragment;
+import com.tresor.home.fragment.ChartFragment;
 
 /**
  * Created by kris on 6/11/17. Tokopedia
@@ -46,7 +45,7 @@ public abstract class TresorActivity extends AppCompatActivity {
                         selectedFragment = SearchFragment.createInstance();
                         break;
                     case R.id.statistic_menu:
-                        selectedFragment = StatisticFragment.createStatisticFragment();
+                        selectedFragment = ChartFragment.createStatisticFragment();
                         break;
                 }
                 FragmentTransaction ft = getFragmentManager().beginTransaction();

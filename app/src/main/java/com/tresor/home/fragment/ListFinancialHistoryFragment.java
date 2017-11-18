@@ -1,10 +1,10 @@
 package com.tresor.home.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -21,7 +21,7 @@ import com.tresor.common.widget.implementable.FilterAutoCompleteTextView;
 import com.tresor.common.widget.template.SmartAutoCompleteTextView;
 import com.tresor.home.activity.AddPaymentActivity;
 import com.tresor.home.activity.EditPaymentActivity;
-import com.tresor.home.adapter.FinancialHistoryAdapter;
+import com.tresor.home.adapter.TodayPageAdapter;
 import com.tresor.home.inteface.HomeActivityListener;
 import com.tresor.home.model.FinancialHistoryModel;
 import com.tresor.home.model.SpendingDataModel;
@@ -39,9 +39,9 @@ import static com.tresor.home.inteface.HomeActivityListener.EXTRA_ADD_DATA_RESUL
  */
 
 public class ListFinancialHistoryFragment extends Fragment
-        implements FinancialHistoryAdapter.ListItemListener, FilterAdapter.onFilterItemClicked {
+        implements TodayPageAdapter.TodayAdapterListener, FilterAdapter.onFilterItemClicked {
 
-    private FinancialHistoryAdapter financialHistoryListAdapter;
+    private TodayPageAdapter financialHistoryListAdapter;
     private List<FinancialHistoryModel> financialList;
 
     public static ListFinancialHistoryFragment createFragment() {
@@ -51,53 +51,69 @@ public class ListFinancialHistoryFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View mainView = inflater.inflate(R.layout.fragment_list_financial_history, container, false);
+        View mainView = inflater.inflate(
+                R.layout.fragment_list_financial_history,
+                container, false
+        );
+        setAutoCompleteView(mainView);
+        setSpendingList(mainView);
+        return mainView;
+    }
+
+    private void setSpendingList(View mainView) {
         RecyclerView financialHistoryList = (RecyclerView) mainView
                 .findViewById(R.id.list_financial_history);
+        setSpendingAdapter(financialHistoryList);
+        financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
 
+    private void setSpendingAdapter(RecyclerView financialHistoryList) {
+        financialList = financialHistoryModelList();
+        financialHistoryListAdapter = new TodayPageAdapter(
+                spendingDataModel().getFinancialHistoryModelList(),
+                this);
+        financialHistoryList.setAdapter(financialHistoryListAdapter);
+    }
+
+    private void onHomeButtonFabClicked() {
+        Intent intent = new Intent(getActivity(), AddPaymentActivity.class);
+        startActivityForResult(intent, ADD_NEW_PAYMENT_REQUEST_CODE);
+    }
+
+    private void setAutoCompleteView(View mainView) {
+        FilterAdapter filterAdapter = new FilterAdapter(this);
+        setFilterResultView(mainView, filterAdapter);
+        setAutoSuggestionEditText(mainView, filterAdapter);
+    }
+
+    private void setFilterResultView(View mainView, FilterAdapter filterAdapter) {
         RecyclerView filterRecyclerView = (RecyclerView) mainView
                 .findViewById(R.id.filter_recycler_view);
-        FilterAdapter filterAdapter = new FilterAdapter(this);
         filterRecyclerView.setAdapter(filterAdapter);
         filterRecyclerView.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
         );
+    }
 
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private void setAutoSuggestionEditText(View mainView, FilterAdapter filterAdapter) {
         FilterAutoCompleteTextView autoCompleteField = (FilterAutoCompleteTextView) mainView
                 .findViewById(R.id.auto_complete_filter);
         AutoCompleteSuggestionAdapter arrayAdapter = new AutoCompleteSuggestionAdapter
                 (getActivity());
         autoCompleteField.setAdapter(arrayAdapter);
+        setDropDownResultAction(filterAdapter, autoCompleteField, arrayAdapter);
+    }
+
+    private void setDropDownResultAction(FilterAdapter filterAdapter,
+                                         FilterAutoCompleteTextView autoCompleteField,
+                                         AutoCompleteSuggestionAdapter arrayAdapter) {
         List<String> hashTagSuggestions = new ArrayList<>();
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
         autoCompleteField.initComponent(compositeDisposable, autoCompleteListener(arrayAdapter,
                 hashTagSuggestions, autoCompleteField));
         autoCompleteField.setOnItemClickListener(onItemClickListener(hashTagSuggestions,
                 filterAdapter, autoCompleteField));
-        financialHistoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        financialHistoryList.setHasFixedSize(true);
-        financialList = financialHistoryModelList();
-        financialHistoryListAdapter = new FinancialHistoryAdapter(getActivity(),
-                spendingDataModel(),
-                this);
-        financialHistoryList.setAdapter(financialHistoryListAdapter);
-        financialHistoryList.setNestedScrollingEnabled(false);
-        FloatingActionButton historicalFloatingActionButton = (FloatingActionButton)
-                mainView.findViewById(R.id.history_floating_action_button);
-        historicalFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onHomeButtonFabClicked();
-            }
-        });
-        return mainView;
     }
-
-    public void onHomeButtonFabClicked() {
-        Intent intent = new Intent(getActivity(), AddPaymentActivity.class);
-        startActivityForResult(intent, ADD_NEW_PAYMENT_REQUEST_CODE);
-    }
-
 
 
     private List<FinancialHistoryModel> selectedFilterResult(List<String> filteredTagList) {
@@ -258,8 +274,13 @@ public class ListFinancialHistoryFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ADD_NEW_PAYMENT_REQUEST_CODE) {
+        if(requestCode == ADD_NEW_PAYMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             onDataAdded((FinancialHistoryModel) data.getParcelableExtra(EXTRA_ADD_DATA_RESULT));
         }
+    }
+
+    @Override
+    public void onHeaderClickedListener() {
+        onHomeButtonFabClicked();
     }
 }
