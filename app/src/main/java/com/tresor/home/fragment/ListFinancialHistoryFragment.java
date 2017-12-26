@@ -164,8 +164,8 @@ public class ListFinancialHistoryFragment extends Fragment
             financialHistoryModel.setHashtag(hashTagList);
             financialHistoryModel
                     .setInfo("#Liburan #Makan Martabak Telor Mang Udin the Conqueror #Siang siang 3 Paket");
-            if(i > 4) {
-                financialHistoryModel.setTheme(i - 5);
+            if(i > 8) {
+                financialHistoryModel.setTheme(i - 9);
             } else financialHistoryModel.setTheme(i);
             list.add(financialHistoryModel);
         }

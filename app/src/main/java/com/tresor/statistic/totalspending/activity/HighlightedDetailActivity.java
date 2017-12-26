@@ -1,4 +1,4 @@
-package com.tresor.statistic.activity;
+package com.tresor.statistic.totalspending.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

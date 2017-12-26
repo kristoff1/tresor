@@ -120,28 +120,28 @@ public abstract class ItemAdapter extends RecyclerView.Adapter<RecyclerView.View
     private void setCardTheme(int theme, FinancialHistoryViewHolder holder) {
         switch (theme) {
             case 0:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_everything_else_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_burger_icon_big);
                 break;
             case 1:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_automotive_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_clothing);
                 break;
             case 2:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_clothing_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_tools);
                 break;
             case 3:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_health);
                 break;
             case 4:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_grocery);
                 break;
             case 5:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_clothing_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_electronics_alternative);
                 break;
             case 6:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_hygine);
                 break;
             case 7:
-                holder.spendingIcon.setImageResource(R.mipmap.ic_cat_health_big);
+                holder.spendingIcon.setImageResource(R.drawable.ic_transportation);
                 break;
             default:
                 holder.spendingIcon.setImageResource(R.mipmap.ic_cat_kitchen_dining_big);

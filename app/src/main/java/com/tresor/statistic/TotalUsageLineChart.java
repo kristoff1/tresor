@@ -22,7 +22,7 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.tresor.R;
-import com.tresor.statistic.activity.HighlightedDetailActivity;
+import com.tresor.statistic.totalspending.activity.HighlightedDetailActivity;
 import com.tresor.statistic.model.totalusage.DailySpendingModel;
 import com.tresor.statistic.model.totalusage.TotalSpendingModel;
 
